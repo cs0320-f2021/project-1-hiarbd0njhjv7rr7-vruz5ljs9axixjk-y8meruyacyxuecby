@@ -34,3 +34,10 @@ public class BloomFilter {
     //TODO: write class
   }
 }
+
+/** NOTES
+ * Hash the pool instead of each individual number for bust, weight, height
+ * Can also pull data from other databases that are unique about individuals
+ * Use hash functions that exist in java already (EX: java hash OR implement your own)
+ * Three hash functions, each applied to every field, then turn that bit on or off
+ */
