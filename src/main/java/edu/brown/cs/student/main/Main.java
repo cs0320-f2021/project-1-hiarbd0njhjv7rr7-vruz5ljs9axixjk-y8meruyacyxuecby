@@ -159,6 +159,10 @@ public final class Main {
             this.fillDistances(sheet, x, y, z);
             this.sortCSVData(sheet);
             this.printKNearest(sheet, k, name);
+          } else if (arguments[0].equals("similar") && arguments.length == 3){
+            //TODO: input first similar method implementation
+          } else if (arguments[0].equals("similar")){
+            //TODO: input second similar method implementation
           } else {
             throw new IOException();
           }
