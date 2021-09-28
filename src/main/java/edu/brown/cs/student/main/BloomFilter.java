@@ -1,11 +1,19 @@
 package edu.brown.cs.student.main;
+import java.util.BitSet;
 
 public class BloomFilter {
+  private BitSet _hashOneSet;
+  private BitSet _hashTwoSet;
+  private BitSet _hashThreeSet;
+  private Hasher _hasher;
+  private FieldParser _fp;
 
   /**
    * BloomFilter constructor, called via the "users" command in REPL
    */
   BloomFilter(/** add constructor information here */){
+    _hasher = new Hasher();
+    _fp = new FieldParser();
     //TODO: write constructor, create BloomFilter
   }
 
