@@ -49,7 +49,8 @@ public interface IDatabase {
    * in datatypes
    *
    * @param tableName - the table to be updated
-   * @param condition - the condition to check on for the update (if no condition, pass empty string)
+   * @param condition - the condition to check on for the update (formatted as `column_name = condition`,
+   *                  if no condition, pass empty string)
    * @param columns - the attributes or column names to be updated
    * @param new_values - the values to be updated in each column
    * @return - the String representing the SQL update query for the specified conditions and values
@@ -64,14 +65,27 @@ public interface IDatabase {
    * in datatypes
    *
    * @param tableName - the table to be deleted
-   * @param conditions - the conditions to check on for the delete query (formatted as `column_name = condition`)
+   * @param condition - the condition to check on for the delete query (formatted as `column_name = condition`,
+   *                  if no condition, pass empty string)
    * @return - the String representing the SQL delete query for the specified conditions and values
    */
-  String generateDeleteStatement(String tableName, String[] conditions);
+  String generateDeleteStatement(String tableName, String condition);
 
+  /**
+   * runQuery is used to execute a query on the database
+   *
+   * @param query - the SQL query to be executed
+   * @return - the ResultSet from executing the query
+   */
   ResultSet runQuery(String query);
+
+  /**
+   * runQuery is used to execute an update on the database (i.e. update, delete, create queries)
+   *
+   * @param query - the SQL query to be executed
+   * @return - the result from executing the update
+   */
   int runUpdate(String query);
-  int runDelete(String query);
-  int runCreate(String query);
+
 
 }
