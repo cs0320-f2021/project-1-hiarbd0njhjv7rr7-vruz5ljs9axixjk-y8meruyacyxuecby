@@ -49,12 +49,12 @@ public interface IDatabase {
    * in datatypes
    *
    * @param tableName - the table to be updated
-   * @param conditions - the conditions to check on for the update (formatted as `column_name = condition`)
+   * @param condition - the condition to check on for the update (if no condition, pass empty string)
    * @param columns - the attributes or column names to be updated
    * @param new_values - the values to be updated in each column
    * @return - the String representing the SQL update query for the specified conditions and values
    */
-  String generateUpdateStatement(String tableName, String[] conditions, String[] columns, String[] new_values);
+  String generateUpdateStatement(String tableName, String condition, String[] columns, String[] new_values);
 
   /**
    * generateDeleteStatement takes in a tableName, an array of conditions, and
