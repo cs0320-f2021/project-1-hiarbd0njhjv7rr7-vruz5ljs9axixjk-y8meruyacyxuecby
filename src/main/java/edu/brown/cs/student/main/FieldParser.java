@@ -73,25 +73,25 @@ public class FieldParser {
     else if ((numHeight <= 511 && !zero) || numHeight == 600){ /** heights 6'0, 5'11, and 5'10 **/
       return 2;
     }
-    else if (numHeight <= 540){ /** heights 5'2, 5'3, 5'4 **/
+    else if (numHeight <= 530){ /** heights 5'1, 5'2, 5'3 **/
       return 3;
     }
-    else if (numHeight <= 570){ /** heights 5'5, 5'6, 5'7 **/
+    else if (numHeight <= 560){ /** heights 5'4, 5'5, 5'6 **/
       return 4;
     }
-    else if (numHeight <= 590){ /** heights 5'8, 5'9 **/
+    else if (numHeight <= 599){ /** heights 5'7, 5'8, 5'9 **/
       return 5;
     }
     else if (numHeight <= 611 && !zero){ /** heights 6'11 and 6'10 **/
       return 6;
     }
-    else if (numHeight <= 640){ /** heights 6'2, 6'3, 6'4 **/
+    else if (numHeight <= 630){ /** heights 6'1, 6'2, 6'3 **/
       return 7;
     }
-    else if (numHeight <= 670){ /** heights 6'5, 6'6, 6'7 **/
+    else if (numHeight <= 660){ /** heights 6'5, 6'5, 6'6 **/
       return 8;
     }
-    else if (numHeight <= 699){ /** heights 6'8, 6'9 **/
+    else if (numHeight <= 699){ /** heights 6'7, 6'8, 6'9 **/
       return 9;
     }
     else{ /** heights 7'0 and up **/
