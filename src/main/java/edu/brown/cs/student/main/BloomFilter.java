@@ -9,9 +9,9 @@ public class BloomFilter {
   private FieldParser _fp;
 
   /**
-   * BloomFilter constructor, called via the "users" command in REPL
+   * BloomFilter constructor, called via the "users" command in REPL to load everything
    */
-  BloomFilter(/** add constructor information here */){
+  BloomFilter(){
     _hasher = new Hasher();
     _fp = new FieldParser();
     //TODO: write constructor, create BloomFilter
@@ -24,6 +24,8 @@ public class BloomFilter {
    */
   public void similar(int k, int userID){
     //TODO: write class
+    //based on userID, pull all fields from SQL
+    //feed into hashers to create all bitsets
   }
 
   /**

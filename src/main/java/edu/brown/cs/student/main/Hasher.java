@@ -10,17 +10,18 @@ public class Hasher {
   }
 
   public int hashOne(){
-    //TOOD: write hash 1
+    //TODO: write hash 1
+    //use Integer hashCode() or Objects.hash?
     return 0;
   }
 
   public int hashTwo(){
-    //TOOD: write hash 2
+    //TODO: write hash 2
     return 0;
   }
 
   public int hashThree(){
-    //TOOD: write hash 3
+    //TODO: write hash 3
     return 0;
   }
 }

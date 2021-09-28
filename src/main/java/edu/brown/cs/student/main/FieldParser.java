@@ -48,16 +48,55 @@ public class FieldParser {
       return 9;
     }
     else{
-      return 11;
+      return 10;
     }
   }
 
   public int parseBust(String bust){ //TODO
     return 0;
-  }
+  } //TODO
 
-  public int parseHeight(String height){ //TODO
-    return 0;
+  public int parseHeight(String height){
+    boolean zero = false;
+    /* removes all non-numeric characters from height.
+      From: https://stackoverflow.com/questions/10372862/java-string-remove-all-non-numeric-charac
+      ters-but-keep-the-decimal-separator */
+    height = height.replaceAll("[^0-9]", "");
+    if (height.length() == 2){ /** adds zero if only two numbers **/
+      height += "0";
+      zero = true;
+    }
+    int numHeight = Integer.parseInt(height);
+    if (numHeight < 500){ /** height less than 5 feet **/
+      return 1;
+    }
+    else if ((numHeight <= 511 && !zero) || numHeight == 600){ /** heights 6'0, 5'11, and 5'10 **/
+      return 2;
+    }
+    else if (numHeight <= 540){ /** heights 5'2, 5'3, 5'4 **/
+      return 3;
+    }
+    else if (numHeight <= 570){ /** heights 5'5, 5'6, 5'7 **/
+      return 4;
+    }
+    else if (numHeight <= 590){ /** heights 5'8, 5'9 **/
+      return 5;
+    }
+    else if (numHeight <= 611 && !zero){ /** heights 6'11 and 6'10 **/
+      return 6;
+    }
+    else if (numHeight <= 640){ /** heights 6'2, 6'3, 6'4 **/
+      return 7;
+    }
+    else if (numHeight <= 670){ /** heights 6'5, 6'6, 6'7 **/
+      return 8;
+    }
+    else if (numHeight <= 699){ /** heights 6'8, 6'9 **/
+      return 9;
+    }
+    else{ /** heights 7'0 and up **/
+      return 10;
+    }
   }
 
   /**
