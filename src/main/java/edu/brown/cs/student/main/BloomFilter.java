@@ -11,10 +11,10 @@ public class BloomFilter {
   /**
    * BloomFilter constructor, called via the "users" command in REPL to load everything
    */
-  BloomFilter(){
+  BloomFilter(String database){
     _hasher = new Hasher();
     _fp = new FieldParser();
-    //TODO: write constructor, create BloomFilter
+    //TODO: load all data from input database into bloomfilter
   }
 
   /**
@@ -25,7 +25,8 @@ public class BloomFilter {
   public void similar(int k, int userID){
     //TODO: write class
     //based on userID, pull all fields from SQL
-    //feed into hashers to create all bitsets
+    //feed fields into field parser to create unique ints for each
+    //feed ints into hashers to check against bitsets
   }
 
   /**
@@ -41,8 +42,16 @@ public class BloomFilter {
    */
   public void similar(int k, String weight, String bust, String height, int age,
                       String body, String horoscope){
-    //TODO: write class
+    int w = _fp.parseWeight(weight);
+    int he = _fp.parseHeight(height);
+    int a = _fp.parseAge(age);
+    int bo = _fp.parseBody(body);
+    int ho = _fp.parseHoroscope(horoscope);
+
+    //then feed these into each hash function
+    //then check against all other data
   }
+
 }
 
 /** NOTES

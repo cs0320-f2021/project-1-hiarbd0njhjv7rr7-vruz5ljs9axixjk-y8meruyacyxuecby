@@ -11,12 +11,15 @@ public class FieldParserTest {
     assertEquals(fp.parseWeight("105lbs"), 1);
     assertEquals(fp.parseWeight("110lbs"), 1);
     assertEquals(fp.parseWeight("177lbs"), 8);
-    assertEquals(fp.parseWeight("215lbs"), 10);
+    assertEquals(fp.parseWeight("215lbs"), 11);
   }
 
   @Test
   public void testBust(){
-
+    FieldParser fp = new FieldParser();
+    assertEquals(fp.parseBust("34D"), 2);
+    assertEquals(fp.parseBust("34DD"), 2);
+    assertEquals(fp.parseBust("32ddd/e"), 1);
   }
 
   @Test

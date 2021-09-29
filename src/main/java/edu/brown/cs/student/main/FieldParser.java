@@ -47,15 +47,50 @@ public class FieldParser {
     else if (numWeight <= 200){
       return 9;
     }
-    else{
+    else if (numWeight <= 210){
       return 10;
+    }
+    else if (numWeight <= 220){
+      return 11;
+    }
+    else if (numWeight <= 230){
+      return 12;
+    }
+    else{
+      return 13;
     }
   }
 
-  public int parseBust(String bust){ //TODO
-    return 0;
-  } //TODO
+  /**
+   * Takes in the bust string, then assigns unique integer based on number in the bust to group
+   * @param bust
+   * @return
+   */
+  public int parseBust(String bust){
+    /* removes all non-numeric characters from height.
+      From: https://stackoverflow.com/questions/10372862/java-string-remove-all-non-numeric-charac
+      ters-but-keep-the-decimal-separator */
+    bust = bust.replaceAll("[^0-9]", "");
+    int numBust = Integer.parseInt(bust);
+    switch (numBust) {
+      case 32:
+        return 1;
+      case 34:
+        return 2;
+      case 36:
+        return 3;
+      case 38:
+        return 4;
+      default:
+        return 0;
+    }
+  }
 
+  /**
+   * Takes in a height, then assigns a unique integer based on each height range
+   * @param height
+   * @return
+   */
   public int parseHeight(String height){
     boolean zero = false;
     /* removes all non-numeric characters from height.
