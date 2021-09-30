@@ -1,6 +1,6 @@
 package edu.brown.cs.student.main;
 
-public class User {
+public class User implements IDataType {
   Integer user_id;
   Integer weight;
   String bust_size;

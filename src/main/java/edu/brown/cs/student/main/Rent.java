@@ -1,6 +1,6 @@
 package edu.brown.cs.student.main;
 
-public class Rent {
+public class Rent implements IDataType {
   String fit;
   Integer user_id;
   Integer item_id;

@@ -1,5 +1,7 @@
 package edu.brown.cs.student.main;
 
+import java.lang.reflect.Constructor;
+import java.sql.SQLException;
 import java.util.List;
 import java.sql.ResultSet;
 
@@ -69,7 +71,9 @@ public interface IDatabase {
    *                  if no condition, pass empty string)
    * @return - the String representing the SQL delete query for the specified conditions and values
    */
-  String generateDeleteStatement(String tableName, String condition);
+  String generateDeleteStatement(String tableName, String[] columns, String[] values);
+
+  String generateSelectStatement(String tableName, String condition);
 
   /**
    * runQuery is used to execute a query on the database
@@ -77,7 +81,7 @@ public interface IDatabase {
    * @param query - the SQL query to be executed
    * @return - the ResultSet from executing the query
    */
-  ResultSet runQuery(String query);
+  <T extends IDataType> List<T> runQuery(String query, Constructor<T> constructor);
 
   /**
    * runQuery is used to execute an update on the database (i.e. update, delete, create queries)
@@ -86,6 +90,13 @@ public interface IDatabase {
    * @return - the result from executing the update
    */
   int runUpdate(String query);
+
+  /**
+   * Checks if a table with the given name exists within the database
+   * @param tableName to check if exists
+   * @return boolean saying whether table exists or not
+   */
+  boolean tableExists(String tableName);
 
 
 }
