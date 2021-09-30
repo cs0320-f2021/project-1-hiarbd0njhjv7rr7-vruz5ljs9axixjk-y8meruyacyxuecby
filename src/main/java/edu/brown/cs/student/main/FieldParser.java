@@ -123,7 +123,7 @@ public class FieldParser {
     else if (numHeight <= 630){ /** heights 6'1, 6'2, 6'3 **/
       return 7;
     }
-    else if (numHeight <= 660){ /** heights 6'5, 6'5, 6'6 **/
+    else if (numHeight <= 660){ /** heights 6'4, 6'5, 6'6 **/
       return 8;
     }
     else if (numHeight <= 699){ /** heights 6'7, 6'8, 6'9 **/

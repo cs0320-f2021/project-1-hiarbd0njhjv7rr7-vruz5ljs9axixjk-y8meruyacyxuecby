@@ -2,19 +2,28 @@ package edu.brown.cs.student.main;
 import java.util.BitSet;
 
 public class BloomFilter {
-  private BitSet _hashOneSet;
-  private BitSet _hashTwoSet;
-  private BitSet _hashThreeSet;
+  private BitSet _bitArrayHash1, _bitArrayHash2, _bitArrayHash3;
+  private BitSet[] _filter;
   private Hasher _hasher;
   private FieldParser _fp;
 
   /**
-   * BloomFilter constructor, called via the "users" command in REPL to load everything
+   * BloomFilter constructor, called via the "users" command in REPL to load everything.
+   * From https://hur.st/bloomfilter/?n=55&p=0.01&m=&k=3:
+   * With 55 possible categories from FieldParser, a desired 1% false positive rate,
+   * and 3 hash functions, there should be 681 bits in the array.
+   * If this is too many bits, we can add more hash functions to reduce that #.
    */
   BloomFilter(String database){
     _hasher = new Hasher();
     _fp = new FieldParser();
-    //TODO: load all data from input database into bloomfilter
+    _bitArrayHash1 = new BitSet(681);
+    _bitArrayHash2 = new BitSet(681);
+    _bitArrayHash3 = new BitSet(681);
+    _filter = new BitSet[3]; /** holds the three bit arrays (one for each hash) **/
+    _filter[0] = _bitArrayHash1;
+    _filter[1] = _bitArrayHash2;
+    _filter[2] = _bitArrayHash3;
   }
 
   /**
@@ -42,6 +51,7 @@ public class BloomFilter {
    */
   public void similar(int k, String weight, String bust, String height, int age,
                       String body, String horoscope){
+    //TODO: write class
     int w = _fp.parseWeight(weight);
     int he = _fp.parseHeight(height);
     int a = _fp.parseAge(age);
