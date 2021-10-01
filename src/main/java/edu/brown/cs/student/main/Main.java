@@ -162,19 +162,19 @@ public final class Main {
             this.sortCSVData(sheet);
             this.printKNearest(sheet, k, name);
           } else if (arguments[0].equals("users")){ //TODO
+            bloomFilters = new BloomList();
             //Create new bloom filter for every entry in arguments[1] specified file,
             //then add to bloomFilters BloomList
           } else if (arguments[0].equals("similar") && arguments.length == 3){ //TODO
             //create desired bloom filter from data in SQL database
             //compare to arraylist using AND or XNOR
             //save and return k most similar
-          } else if (arguments[0].equals("similar") && arguments.length == 8){ //TODO
+          } else if (arguments[0].equals("similar") && arguments.length == 8){
             int k = Integer.parseInt(arguments[1]);
             //create desired bloom filter from input data
             BloomFilter toCompare = new BloomFilter(arguments[2], arguments[3], arguments[4],
-                Integer.parseInt(arguments[5]), arguments[6], arguments[7]);
-            //compare to arraylist using AND or XNOR
-            //save and return k most similar
+                Integer.parseInt(arguments[5]), arguments[6], arguments[7], "1");
+            bloomFilters.findKSimilar(toCompare, k);
           } else {
             throw new IOException();
           }

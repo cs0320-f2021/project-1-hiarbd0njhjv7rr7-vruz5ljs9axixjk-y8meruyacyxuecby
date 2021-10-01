@@ -7,6 +7,7 @@ public class BloomFilter {
   private BitSet[] _filter;
   private Hasher _hasher;
   private FieldParser _fp;
+  private String _userID;
 
   /**
    * BloomFilter constructor, called via the "users" command in REPL to load everything.
@@ -19,7 +20,8 @@ public class BloomFilter {
    * Throws IO Exception if parsing goes wrong, which means the input in REPL was incorrect.
    */
   BloomFilter(String weight, String bust, String height, int age,
-              String body, String horoscope) throws IOException {
+              String body, String horoscope, String userID) throws IOException {
+    _userID = userID;
     _hasher = new Hasher();
     _fp = new FieldParser();
     _bitArrayHash1 = new BitSet(693);
@@ -50,7 +52,8 @@ public class BloomFilter {
    * @param two
    * @param three
    */
-  BloomFilter(BitSet one, BitSet two, BitSet three){
+  BloomFilter(BitSet one, BitSet two, BitSet three, String userID){
+    _userID = userID;
     _filter = new BitSet[3]; /** holds the three bit arrays (one for each hash) **/
     _filter[0] = one;
     _filter[1] = two;
@@ -63,6 +66,14 @@ public class BloomFilter {
    */
   public BitSet[] getBitSets(){
     return _filter;
+  }
+
+  /**
+   * Returns userID of the user/entry associated with this bloom filter
+   * @return
+   */
+  public String getUserID(){
+    return _userID;
   }
 
   /** sets each bitset in the filter to true at the location returned by hash1, hash2, and hash3
