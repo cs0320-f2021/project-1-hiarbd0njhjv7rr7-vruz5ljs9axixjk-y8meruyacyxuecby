@@ -1,4 +1,5 @@
 package edu.brown.cs.student.main;
+import java.io.IOException;
 import java.util.BitSet;
 
 public class BloomFilter {
@@ -15,9 +16,10 @@ public class BloomFilter {
    * If this is too many bits, we can add more hash functions to reduce that #.
    * Creates all instance variables, parses all input fields, then hashes them and adds to
    * bloom filter.
+   * Throws IO Exception if parsing goes wrong, which means the input in REPL was incorrect.
    */
   BloomFilter(String weight, String bust, String height, int age,
-              String body, String horoscope){
+              String body, String horoscope) throws IOException {
     _hasher = new Hasher();
     _fp = new FieldParser();
     _bitArrayHash1 = new BitSet(693);
@@ -27,13 +29,40 @@ public class BloomFilter {
     _filter[0] = _bitArrayHash1;
     _filter[1] = _bitArrayHash2;
     _filter[2] = _bitArrayHash3;
-    int w = _fp.parseWeight(weight);
-    int bu = _fp.parseBust(bust);
-    int he = _fp.parseHeight(height);
-    int a = _fp.parseAge(age);
-    int bo = _fp.parseBody(body);
-    int ho = _fp.parseHoroscope(horoscope);
-    this.hashAll(w, bu, he, a, bo, ho);
+    try{
+      int w = _fp.parseWeight(weight);
+      int bu = _fp.parseBust(bust);
+      int he = _fp.parseHeight(height);
+      int a = _fp.parseAge(age);
+      int bo = _fp.parseBody(body);
+      int ho = _fp.parseHoroscope(horoscope);
+      this.hashAll(w, bu, he, a, bo, ho);
+    }
+    catch (Exception e){
+      throw new IOException();
+    }
+  }
+
+  /**
+   * Alternate BloomFilter constructor that makes the filter from three given bitsets.
+   * Used in BloomList to save defensive copies.
+   * @param one
+   * @param two
+   * @param three
+   */
+  BloomFilter(BitSet one, BitSet two, BitSet three){
+    _filter = new BitSet[3]; /** holds the three bit arrays (one for each hash) **/
+    _filter[0] = one;
+    _filter[1] = two;
+    _filter[2] = three;
+  }
+
+  /**
+   * Returns array of all 3 bitsets in the filter
+   * @return
+   */
+  public BitSet[] getBitSets(){
+    return _filter;
   }
 
   /** sets each bitset in the filter to true at the location returned by hash1, hash2, and hash3
@@ -42,15 +71,6 @@ public class BloomFilter {
     _filter[0].set(_hasher.hashOne(w, bu, he, a, bo, ho));
     _filter[1].set(_hasher.hashTwo(w, bu, he, a, bo, ho));
     _filter[2].set(_hasher.hashThree(w, bu, he, a, bo, ho));
-  }
-
-  /**
-   * Clears all bitsets in the bloom filter.
-   */
-  private void clearAll(){
-    _filter[0].clear();
-    _filter[1].clear();
-    _filter[2].clear();
   }
 
 }

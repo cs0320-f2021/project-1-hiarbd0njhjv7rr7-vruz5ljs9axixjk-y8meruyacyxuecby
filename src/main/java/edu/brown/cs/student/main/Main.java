@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Map;
@@ -72,6 +73,7 @@ public final class Main {
     try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
       String input;
       String[][] sheet = new String[1][1];
+      BloomList bloomFilters = new BloomList();
       while ((input = br.readLine()) != null) {
         try {
           input = input.trim();
@@ -159,10 +161,20 @@ public final class Main {
             this.fillDistances(sheet, x, y, z);
             this.sortCSVData(sheet);
             this.printKNearest(sheet, k, name);
-          } else if (arguments[0].equals("similar") && arguments.length == 3){
-            //TODO: input first similar method implementation
-          } else if (arguments[0].equals("similar")){
-            //TODO: input second similar method implementation
+          } else if (arguments[0].equals("users")){ //TODO
+            //Create new bloom filter for every entry in arguments[1] specified file,
+            //then add to bloomFilters BloomList
+          } else if (arguments[0].equals("similar") && arguments.length == 3){ //TODO
+            //create desired bloom filter from data in SQL database
+            //compare to arraylist using AND or XNOR
+            //save and return k most similar
+          } else if (arguments[0].equals("similar") && arguments.length == 8){ //TODO
+            int k = Integer.parseInt(arguments[1]);
+            //create desired bloom filter from input data
+            BloomFilter toCompare = new BloomFilter(arguments[2], arguments[3], arguments[4],
+                Integer.parseInt(arguments[5]), arguments[6], arguments[7]);
+            //compare to arraylist using AND or XNOR
+            //save and return k most similar
           } else {
             throw new IOException();
           }
