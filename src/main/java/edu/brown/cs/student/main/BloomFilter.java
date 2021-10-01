@@ -9,17 +9,17 @@ public class BloomFilter {
 
   /**
    * BloomFilter constructor, called via the "users" command in REPL to load everything.
-   * From https://hur.st/bloomfilter/?n=55&p=0.01&m=&k=3:
-   * With 55 possible categories from FieldParser, a desired 1% false positive rate,
-   * and 3 hash functions, there should be 681 bits in the array.
+   * From https://hur.st/bloomfilter/?n=56&p=0.01&m=&k=3:
+   * With 56 possible categories from FieldParser, a desired 1% false positive rate,
+   * and 3 hash functions, there should be 693 bits in the array.
    * If this is too many bits, we can add more hash functions to reduce that #.
    */
   BloomFilter(String database){
     _hasher = new Hasher();
     _fp = new FieldParser();
-    _bitArrayHash1 = new BitSet(681);
-    _bitArrayHash2 = new BitSet(681);
-    _bitArrayHash3 = new BitSet(681);
+    _bitArrayHash1 = new BitSet(693);
+    _bitArrayHash2 = new BitSet(693);
+    _bitArrayHash3 = new BitSet(693);
     _filter = new BitSet[3]; /** holds the three bit arrays (one for each hash) **/
     _filter[0] = _bitArrayHash1;
     _filter[1] = _bitArrayHash2;
