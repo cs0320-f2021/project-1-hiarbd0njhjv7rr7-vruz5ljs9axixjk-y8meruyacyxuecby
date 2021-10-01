@@ -2,7 +2,7 @@ package edu.brown.cs.student.main;
 
 import java.util.Date;
 
-public class Review {
+public class Review implements IDataType {
   Integer id;
   Date review_date;
   String review_summary;
