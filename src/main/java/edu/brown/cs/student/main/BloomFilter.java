@@ -13,8 +13,11 @@ public class BloomFilter {
    * With 56 possible categories from FieldParser, a desired 1% false positive rate,
    * and 3 hash functions, there should be 693 bits in the array.
    * If this is too many bits, we can add more hash functions to reduce that #.
+   * Creates all instance variables, parses all input fields, then hashes them and adds to
+   * bloom filter.
    */
-  BloomFilter(String database){
+  BloomFilter(String weight, String bust, String height, int age,
+              String body, String horoscope){
     _hasher = new Hasher();
     _fp = new FieldParser();
     _bitArrayHash1 = new BitSet(693);
@@ -24,49 +27,30 @@ public class BloomFilter {
     _filter[0] = _bitArrayHash1;
     _filter[1] = _bitArrayHash2;
     _filter[2] = _bitArrayHash3;
-  }
-
-  /**
-   * Finds k similar users to a user with a certain id; called via the "similar" command in REPL
-   * @param k number of similar users to find
-   * @param userID user ID of user to find similar users to
-   */
-  public void similar(int k, int userID){
-    //TODO: write class
-    //based on userID, pull all fields from SQL
-    //feed fields into field parser to create unique ints for each
-    //feed ints into hashers to check against bitsets
-  }
-
-  /**
-   * Also finds k similar users, but with the input user data instead of an ID
-   * Data types in constructor match that of the users database
-   * @param k number of users to find
-   * @param weight
-   * @param bust
-   * @param height
-   * @param age
-   * @param body
-   * @param horoscope
-   */
-  public void similar(int k, String weight, String bust, String height, int age,
-                      String body, String horoscope){
-    //TODO: write class
     int w = _fp.parseWeight(weight);
+    int bu = _fp.parseBust(bust);
     int he = _fp.parseHeight(height);
     int a = _fp.parseAge(age);
     int bo = _fp.parseBody(body);
     int ho = _fp.parseHoroscope(horoscope);
+    this.hashAll(w, bu, he, a, bo, ho);
+  }
 
-    //then feed these into each hash function
-    //then check against all other data
+  /** sets each bitset in the filter to true at the location returned by hash1, hash2, and hash3
+   * respectively (hash1 = filter[0], hash2 = filter[1], hash3 = filter[2]) **/
+  private void hashAll(int w, int bu, int he, int a, int bo, int ho){
+    _filter[0].set(_hasher.hashOne(w, bu, he, a, bo, ho));
+    _filter[1].set(_hasher.hashTwo(w, bu, he, a, bo, ho));
+    _filter[2].set(_hasher.hashThree(w, bu, he, a, bo, ho));
+  }
+
+  /**
+   * Clears all bitsets in the bloom filter.
+   */
+  private void clearAll(){
+    _filter[0].clear();
+    _filter[1].clear();
+    _filter[2].clear();
   }
 
 }
-
-/** NOTES
- * Hash the pool instead of each individual number for bust, weight, height
- * Can also pull data from other databases that are unique about individuals
- * Use hash functions that exist in java already (EX: java hash OR implement your own)
- * Three hash functions, each applied to every field, then turn that bit on or off
- */
