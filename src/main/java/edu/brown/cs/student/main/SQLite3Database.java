@@ -95,20 +95,19 @@ public class SQLite3Database implements IDatabase {
   }
 
   @Override
-  public String generateUpdateStatement(String tableName, String condition, String[] columns,
-                                        String[] new_values) {
+  public String generateUpdateStatement(String tableName, String condition, String[] checkColumns, String[] checkValues) {
     StringBuilder update = new StringBuilder("UPDATE " + tableName + "\n");
-    StringBuilder set = new StringBuilder("SET ");
-    String where = "\nWHERE\n" + condition;
+    String set = "SET " + condition;
+    StringBuilder where = new StringBuilder("\nWHERE\n");
     String delim = "";
 
-    for (int i = 0; i < columns.length; i++) {
-      String currColumn = columns[i];
-      String currValue = new_values[i];
-      set.append(delim);
-      set.append(currColumn);
-      set.append(" = ");
-      set.append(currValue);
+    for (int i = 0; i < checkColumns.length; i++) {
+      String currColumn = checkColumns[i];
+      String currValue = checkValues[i];
+      where.append(delim);
+      where.append(currColumn);
+      where.append(" = ");
+      where.append(currValue);
       delim = ", ";
     }
 
@@ -143,7 +142,7 @@ public class SQLite3Database implements IDatabase {
 
 
   @Override
-  public <T extends IDataType> List<T> runQuery(String query, Constructor<T> constructor) {
+  public <T extends IDataType> List<T> runQuery(String query, Constructor<? extends T> constructor) {
     PreparedStatement prep;
 
     try {

@@ -57,7 +57,7 @@ public interface IDatabase {
    * @param new_values - the values to be updated in each column
    * @return - the String representing the SQL update query for the specified conditions and values
    */
-  String generateUpdateStatement(String tableName, String condition, String[] columns, String[] new_values);
+  String generateUpdateStatement(String tableNam, String condition, String[] checkColumns, String[] checkValues);
 
   /**
    * generateDeleteStatement takes in a tableName, an array of conditions, and
@@ -81,7 +81,7 @@ public interface IDatabase {
    * @param query - the SQL query to be executed
    * @return - the ResultSet from executing the query
    */
-  <T extends IDataType> List<T> runQuery(String query, Constructor<T> constructor);
+  <T extends IDataType> List<T> runQuery(String query, Constructor<? extends T> constructor);
 
   /**
    * runQuery is used to execute an update on the database (i.e. update, delete, create queries)
