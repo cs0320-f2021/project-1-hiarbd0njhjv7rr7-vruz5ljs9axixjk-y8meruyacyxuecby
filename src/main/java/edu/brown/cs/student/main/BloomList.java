@@ -11,7 +11,7 @@ public class BloomList {
   int[][] _similarities;
 
   /**
-   * Constructor for BloomList
+   * Constructor for BloomList.
    */
   BloomList() {
     _filters = new ArrayList<BloomFilter>();
