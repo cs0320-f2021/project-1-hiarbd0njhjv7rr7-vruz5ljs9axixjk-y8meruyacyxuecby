@@ -126,7 +126,7 @@ public class SQLite3Database implements IDatabase {
     StringBuilder where = new StringBuilder("\nWHERE\n");
     String delim = "";
 
-    for (int i = 0; i < columns.length; i++){
+    for (int i = 0; i < columns.length; i++) {
       where.append(delim).append(columns[i]).append("=").append(values[i]);
       delim = " AND ";
     }

@@ -8,8 +8,8 @@ public class  DeconstructedObject <T extends IDataType> {
   private String[] values;
   private String[] datatypes;
 
-  public DeconstructedObject(T object){
-    try{
+  public DeconstructedObject(T object) {
+    try {
       Class classType = object.getClass();
       String className = classType.getName();
       Field[] fields = classType.getDeclaredFields();
@@ -23,7 +23,7 @@ public class  DeconstructedObject <T extends IDataType> {
         String currValue;
         Class<?> currClass = currField.getType();
         if (currClass.isAssignableFrom(Integer.class)) {
-          currValue = ((Integer) currField.getInt(object)).toString();
+          currValue = ((Integer) currField.get(object)).toString();
           datatypes[i] = "INTEGER";
         } else {
           currValue = (String) currField.get(object);
@@ -38,6 +38,7 @@ public class  DeconstructedObject <T extends IDataType> {
       this.datatypes = datatypes;
     } catch (IllegalAccessException e) {
       e.printStackTrace();
+      System.out.println("ERROR: IllegalAccessException while deconstructing object!");
     }
 
   }
