@@ -6,13 +6,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.Gson;
 
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
@@ -74,6 +77,7 @@ public final class Main {
       String input;
       String[][] sheet = new String[1][1];
       BloomList bloomFilters = new BloomList();
+      ORM orm;
       while ((input = br.readLine()) != null) {
         try {
           input = input.trim();
@@ -161,15 +165,23 @@ public final class Main {
             this.fillDistances(sheet, x, y, z);
             this.sortCSVData(sheet);
             this.printKNearest(sheet, k, name);
-          } else if (arguments[0].equals("users")){ //TODO
+          } else if (arguments[0].equals("users") && arguments.length == 2) {
             bloomFilters = new BloomList();
             //Create new bloom filter for every entry in arguments[1] specified file,
             //then add to bloomFilters BloomList
-          } else if (arguments[0].equals("similar") && arguments.length == 3){ //TODO
+            if (arguments[1].endsWith(".sqlite3")) {
+              orm = new ORM(arguments[1]);
+              List<User> userList = orm.sql("SELECT * FROM user");
+              for (User user : userList) {
+                bloomFilters.insert(user.makeBloomFilter());
+              }
+            }
+
+          } else if (arguments[0].equals("similar") && arguments.length == 3) { //TODO
             //create desired bloom filter from data in SQL database
             //compare to arraylist using AND or XNOR
             //save and return k most similar
-          } else if (arguments[0].equals("similar") && arguments.length == 8){
+          } else if (arguments[0].equals("similar") && arguments.length == 8) {
             int k = Integer.parseInt(arguments[1]);
             /** creates bloom filter from given arguments with userID 1 (irrelevant) */
             BloomFilter toCompare = new BloomFilter(arguments[2], arguments[3], arguments[4],

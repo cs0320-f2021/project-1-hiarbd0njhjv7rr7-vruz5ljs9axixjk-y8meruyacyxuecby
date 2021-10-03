@@ -31,7 +31,7 @@ public class BloomFilter {
     _filter[0] = _bitArrayHash1;
     _filter[1] = _bitArrayHash2;
     _filter[2] = _bitArrayHash3;
-    try{
+    try {
       int w = _fp.parseWeight(weight);
       int bu = _fp.parseBust(bust);
       int he = _fp.parseHeight(height);

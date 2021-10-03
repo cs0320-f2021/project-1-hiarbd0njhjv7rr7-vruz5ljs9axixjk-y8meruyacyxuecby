@@ -153,7 +153,7 @@ public class ORM {
 
   public <T extends  IDataType> List<T> sql(String sqlQuery) {
     if (sqlQuery.toUpperCase().contains("SELECT")){
-      if (sqlQuery.contains("FROM users")){
+      if (sqlQuery.contains("FROM user")){
         Constructor<? extends T> constructor = null;
 
         for (Constructor<?> cxtor : User.class.getConstructors()){
