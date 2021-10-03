@@ -26,7 +26,7 @@ public class ORM {
       String create = database.generateCreateStatement(tableName, columns, datatypes);
       int res = database.runUpdate(create);
     }
-    String query = database.generateInsertStatement(tableName, columns, values);
+    String query = database.generateInsertStatement(tableName, columns, values, datatypes);
     int res = database.runUpdate(query);
 
     if (res > 0){

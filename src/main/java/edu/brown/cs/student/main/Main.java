@@ -171,7 +171,7 @@ public final class Main {
             //save and return k most similar
           } else if (arguments[0].equals("similar") && arguments.length == 8){
             int k = Integer.parseInt(arguments[1]);
-            //create desired bloom filter from input data
+            /** creates bloom filter from given arguments with userID 1 (irrelevant) */
             BloomFilter toCompare = new BloomFilter(arguments[2], arguments[3], arguments[4],
                 Integer.parseInt(arguments[5]), arguments[6], arguments[7], "1");
             bloomFilters.findKSimilar(toCompare, k);
