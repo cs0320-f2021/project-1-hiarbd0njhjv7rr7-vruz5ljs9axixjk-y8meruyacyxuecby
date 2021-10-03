@@ -167,9 +167,9 @@ public final class Main {
             this.printKNearest(sheet, k, name);
           } else if (arguments[0].equals("users") && arguments.length == 2) {
             bloomFilters = new BloomList();
-            //Create new bloom filter for every entry in arguments[1] specified file,
-            //then add to bloomFilters BloomList
-            if (arguments[1].endsWith(".sqlite3")) {
+            /** Create new bloom filter for every entry in arguments[1] specified file,
+            then add to bloomFilters BloomList */
+            if (arguments[1].endsWith(".sqlite3")) { //only works with sqlite databases
               orm = new ORM(arguments[1]);
               List<User> userList = orm.sql("SELECT * FROM user");
               for (User user : userList) {
