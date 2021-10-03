@@ -1,14 +1,14 @@
 package edu.brown.cs.student.main;
 
 public class Rent implements IDataType {
-  public final String fit;
-  public final Integer userId;
-  public final Integer itemId;
-  public final Integer rating;
-  public final String rentedFor;
-  public final String category;
-  public final String size;
-  public final Integer id;
+  final String fit;
+  final Integer userId;
+  final Integer itemId;
+  final Integer rating;
+  final String rentedFor;
+  final String category;
+  final String size;
+  final Integer id;
 
   public Rent(String fit, Integer userId, Integer itemId, Integer rating,
               String rentedFor, String category, String size, Integer id) {

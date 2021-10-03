@@ -39,11 +39,10 @@ public interface IDatabase {
    * @param tableName - the name of the table to insert a new row to
    * @param columns - the attributes or column names to be inserted for the table
    * @param values - the values to be inserted into each column
-   * @param types - the datatypes of the columns
    * @return - the String representing the SQL Insert query for the specified attributes
    */
   String generateInsertStatement(String tableName, String[] columns,
-                                 String[] values, String[] types);
+                                 String[] values);
 
   /**
    * generateUpdateStatement takes in a tableName, an array of conditions, and

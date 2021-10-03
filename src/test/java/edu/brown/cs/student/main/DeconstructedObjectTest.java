@@ -20,18 +20,31 @@ public class DeconstructedObjectTest {
         0);
   }
 
+  private User initUser() {
+    return new User(200, 154, "small", 170, 20,
+        "stocky", "libra");
+  }
+
   @Test
   public void testGetters() {
     // Testing if the fields were set correctly
     DeconstructedObject<Rent> rent = new DeconstructedObject<>(initRent());
-    System.out.println(rent.getClassName());
-    assertEquals("edu.brown.cs.student.main.Rent", rent.getClassName());
+    assertEquals("Rent", rent.getClassName());
     assertArrayEquals(new String[]{"fit", "userId", "itemId", "rating", "rentedFor", "category", "size", "id"},
         rent.getColumns());
-    assertArrayEquals(new String[]{"tight", "1", "11", "3", "vacation", "dress", "large", "0"},
+    assertArrayEquals(new String[]{"'tight'", "1", "11", "3", "'vacation'", "'dress'", "'large'", "0"},
         rent.getValues());
     assertArrayEquals(new String[]{"TEXT", "INTEGER", "INTEGER", "INTEGER", "TEXT", "TEXT", "TEXT", "INTEGER"},
         rent.getDatatypes());
+
+    DeconstructedObject<User> user = new DeconstructedObject<>(initUser());
+    assertEquals("User", user.getClassName());
+    assertArrayEquals(new String[]{"userId", "weight", "bustSize", "height", "age", "bodyType", "horoscope"},
+        user.getColumns());
+    assertArrayEquals(new String[]{"200", "154", "'small'", "170", "20", "'stocky'", "'libra'"},
+        user.getValues());
+    assertArrayEquals(new String[]{"INTEGER", "INTEGER", "TEXT", "INTEGER", "INTEGER", "TEXT", "TEXT"},
+        user.getDatatypes());
   }
 
 }

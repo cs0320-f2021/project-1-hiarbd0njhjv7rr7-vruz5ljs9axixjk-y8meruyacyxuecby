@@ -4,14 +4,14 @@ import java.util.Date;
 
 public class Review implements IDataType {
   Integer id;
-  Date review_date;
-  String review_summary;
-  String review_text;
+  Date reviewDate;
+  String reviewSummary;
+  String reviewText;
 
   public Review(int id, Date reviewDate, String reviewSummary, String reviewText){
     this.id = id;
-    this.review_date = reviewDate;
-    this.review_summary = reviewSummary;
-    this.review_text = reviewText;
+    this.reviewDate = reviewDate;
+    this.reviewSummary = reviewSummary;
+    this.reviewText = reviewText;
   }
 }

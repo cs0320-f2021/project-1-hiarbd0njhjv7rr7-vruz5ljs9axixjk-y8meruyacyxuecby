@@ -1,22 +1,22 @@
 package edu.brown.cs.student.main;
 
 public class User implements IDataType {
-  Integer user_id;
+  Integer userId;
   Integer weight;
-  String bust_size;
+  String bustSize;
   Integer height;
   Integer age;
-  String body_type;
+  String bodyType;
   String horoscope;
 
-  public User(Integer user_id, Integer weight, String bust_size, Integer height,
-              Integer age, String body_type, String horoscope){
-    this.user_id = user_id;
+  public User(Integer userId, Integer weight, String bustSize, Integer height,
+              Integer age, String bodyType, String horoscope) {
+    this.userId = userId;
     this.weight = weight;
-    this.bust_size = bust_size;
+    this.bustSize = bustSize;
     this.height = height;
     this.age = age;
-    this.body_type = body_type;
+    this.bodyType = bodyType;
     this.horoscope = horoscope;
   }
 }

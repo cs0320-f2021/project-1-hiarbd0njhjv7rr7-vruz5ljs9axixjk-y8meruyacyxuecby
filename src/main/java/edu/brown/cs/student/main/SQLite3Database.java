@@ -19,11 +19,11 @@ public class SQLite3Database implements IDatabase {
 
   private Connection conn;
 
-  public SQLite3Database(String dbName){
+  public SQLite3Database(String dbName) {
     this.connectToDatabase(dbName);
   }
 
-  protected Connection establishConnection(String dbName){
+  protected Connection establishConnection(String dbName) {
     try {
       Class.forName("org.sqlite.JDBC");
       return DriverManager.getConnection("jdbc:sqlite:" + dbName);
@@ -58,13 +58,15 @@ public class SQLite3Database implements IDatabase {
     // if no table, call generateCreate
     StringBuilder create = new StringBuilder("CREATE TABLE IF NOT EXISTS "
                                               + tableName + "(");
-    String delim = ",\n";
+    String delim = ",";
 
     for (int i = 0; i < columns.length; i++) {
       String currCol = columns[i];
       String currType = datatypes[i];
-      create.append(columns[i] + " " + datatypes[i]);
-      if (i == columns.length - 1) delim = ");";
+      create.append(columns[i]).append(" ").append(datatypes[i]);
+      if (i == columns.length - 1) {
+        delim = ");";
+      }
       create.append(delim);
     }
 
@@ -73,27 +75,19 @@ public class SQLite3Database implements IDatabase {
 
   @Override
   public String generateInsertStatement(String tableName, String[] columns,
-                                        String[] values, String[] types) {
-    StringBuilder insert = new StringBuilder("INSERT INTO " + tableName + " (");
-    StringBuilder placeholder = new StringBuilder(" VALUES \n (");
+                                        String[] values) {
+    StringBuilder insert = new StringBuilder("INSERT INTO " + tableName + " VALUES (");
     String delim = "";
 
     for (int i = 0; i < columns.length; i++) {
-      String currColumn = columns[i];
       String currValue = values[i];
       insert.append(delim);
-      placeholder.append(delim);
+
       delim = ", ";
-      insert.append(currColumn);
-      if (types[i].equals("TEXT")) {
-        currValue = "'" + currValue + "'";
-      }
-      placeholder.append(currValue);
+      insert.append(currValue);
     }
 
-    placeholder.append(");");
-    insert.append(")\n");
-    insert.append(placeholder.toString());
+    insert.append(");");
 
     return insert.toString();
   }
@@ -117,7 +111,7 @@ public class SQLite3Database implements IDatabase {
 
     update.append(set);
 
-    if (!condition.equals("")){
+    if (!condition.equals("")) {
       update.append(where);
     }
     update.append(";");
@@ -126,12 +120,11 @@ public class SQLite3Database implements IDatabase {
 
   @Override
   public String generateDeleteStatement(String tableName, String[] columns, String[] values) {
-    StringBuilder delete = new StringBuilder("DELETE FROM " + tableName + "\n");
-    StringBuilder where = new StringBuilder("\nWHERE\n");
+    StringBuilder delete = new StringBuilder("DELETE FROM " + tableName + "\n" + "WHERE\n");
     String delim = "";
 
     for (int i = 0; i < columns.length; i++) {
-      where.append(delim).append(columns[i]).append("=").append(values[i]);
+      delete.append(delim).append(columns[i]).append("=").append(values[i]);
       delim = " AND ";
     }
 
