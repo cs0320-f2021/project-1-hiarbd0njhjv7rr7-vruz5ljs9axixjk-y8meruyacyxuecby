@@ -72,8 +72,9 @@ public class SQLite3Database implements IDatabase {
   }
 
   @Override
-  public String generateInsertStatement(String tableName, String[] columns, String[] values) {
-    StringBuilder insert = new StringBuilder("INSERT INTO " + tableName +" (");
+  public String generateInsertStatement(String tableName, String[] columns,
+                                        String[] values, String[] types) {
+    StringBuilder insert = new StringBuilder("INSERT INTO " + tableName + " (");
     StringBuilder placeholder = new StringBuilder(" VALUES \n (");
     String delim = "";
 
@@ -84,6 +85,9 @@ public class SQLite3Database implements IDatabase {
       placeholder.append(delim);
       delim = ", ";
       insert.append(currColumn);
+      if (types[i].equals("TEXT")) {
+        currValue = "'" + currValue + "'";
+      }
       placeholder.append(currValue);
     }
 
