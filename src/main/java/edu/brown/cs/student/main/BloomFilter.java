@@ -40,7 +40,7 @@ public class BloomFilter {
       int ho = _fp.parseHoroscope(horoscope);
       this.hashAll(w, bu, he, a, bo, ho);
     }
-    catch (Exception e){
+    catch (Exception e) {
       throw new IOException();
     }
   }
@@ -52,7 +52,7 @@ public class BloomFilter {
    * @param two
    * @param three
    */
-  BloomFilter(BitSet one, BitSet two, BitSet three, String userID){
+  BloomFilter(BitSet one, BitSet two, BitSet three, String userID) {
     _userID = userID;
     _filter = new BitSet[3]; /** holds the three bit arrays (one for each hash) **/
     _filter[0] = one;
@@ -64,7 +64,7 @@ public class BloomFilter {
    * Returns array of all 3 bitsets in the filter
    * @return
    */
-  public BitSet[] getBitSets(){
+  public BitSet[] getBitSets() {
     return _filter;
   }
 
@@ -72,7 +72,7 @@ public class BloomFilter {
    * Returns userID of the user/entry associated with this bloom filter
    * @return
    */
-  public String getUserID(){
+  public String getUserID() {
     return _userID;
   }
 

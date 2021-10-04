@@ -77,7 +77,7 @@ public final class Main {
       String input;
       String[][] sheet = new String[1][1];
       BloomList bloomFilters = new BloomList();
-      ORM orm;
+      ORM orm = null;
       while ((input = br.readLine()) != null) {
         try {
           input = input.trim();
@@ -181,6 +181,17 @@ public final class Main {
             //create desired bloom filter from data in SQL database
             //compare to arraylist using AND or XNOR
             //save and return k most similar
+            if (orm == null) {
+              throw new IOException("ERROR: Database not loaded!");
+            }
+            int k = Integer.parseInt(arguments[1]);
+            List<User> resultList = orm.where("user_id", arguments[2], User.class);
+            if (!resultList.isEmpty()) {
+              BloomFilter toCompare = resultList.get(0).makeBloomFilter();
+              bloomFilters.findKSimilar(toCompare, k);
+            } else {
+              throw new IOException("ERROR: No such user_id");
+            }
           } else if (arguments[0].equals("similar") && arguments.length == 8) {
             int k = Integer.parseInt(arguments[1]);
             /** creates bloom filter from given arguments with userID 1 (irrelevant) */
