@@ -39,7 +39,7 @@ public class DeconstructedObjectTest {
 
     DeconstructedObject<User> user = new DeconstructedObject<>(initUser());
     assertEquals("User", user.getClassName());
-    assertArrayEquals(new String[]{"userId", "weight", "bustSize", "height", "age", "bodyType", "horoscope"},
+    assertArrayEquals(new String[]{"user_id", "weight", "bust_size", "height", "age", "body_type", "horoscope"},
         user.getColumns());
     assertArrayEquals(new String[]{"200", "154", "'small'", "170", "20", "'stocky'", "'libra'"},
         user.getValues());

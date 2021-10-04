@@ -60,50 +60,23 @@ public class ORM {
 
   public <T extends  IDataType> boolean update(T object, String condition, String value) {
     String newCondition = condition + "=" + value;
-    DeconstructedObject<T> obj = new DeconstructedObject<T>(object);
-    String tableName = obj.getClassName().toLowerCase();
-    String[] columns = obj.getColumns();
-    String[] values = obj.getValues();
-
-    int index = -1;
-
-    for (int i = 0; i < columns.length; i++){
-      if (condition.equals(columns[i])){
-        index = i;
-      }
-    }
-
-    if (index == -1){
-      PrintHelper.printlnRed("Condition not found.");
-      return false;
-    }
-
-    String[] newColumns = new String[columns.length-1];
-    String[] newValues = new String[values.length-1];
-
-    int adjust = 0;
-
-    for (int j = 0; j < newColumns.length; j++){
-      if (j == index) {
-        adjust = 1;
-      } else {
-        newColumns[j] = columns[j-adjust];
-        newValues[j] = values[j-adjust];
-      }
-    }
-
-    String query = this.database.generateUpdateStatement(tableName, newCondition, newColumns, newValues);
-    int res = this.database.runUpdate(query);
-
-    if (res < 0){
-      return false;
-    }
-
-    return true;
+    return updateHelper(object, condition, newCondition);
   }
 
   public <T extends  IDataType> boolean update(T object, String condition) {
     String newCondition = "";
+    return updateHelper(object, condition, newCondition);
+  }
+
+  /**
+   * update helper, to reduce repeated code, finds parameters to pass to update
+   * statement.
+   * @param object - object to update
+   * @param condition - condition to update on
+   * @param newCondition - condition statement
+   * @return boolean representing success
+   */
+  private <T extends IDataType> boolean updateHelper(T object, String condition, String newCondition) {
     DeconstructedObject<T> obj = new DeconstructedObject<T>(object);
     String tableName = obj.getClassName().toLowerCase();
     String[] columns = obj.getColumns();
@@ -111,14 +84,16 @@ public class ORM {
 
     int index = -1;
 
-    for (int i = 0; i < columns.length; i++){
-      if (condition.equals(columns[i])){
+    for (int i = 0; i < columns.length; i++) {
+      if (condition.equals(columns[i])) {
         index = i;
-        newCondition = condition + "=" + values[i];
+        if (newCondition.equals("")) {
+          newCondition = condition + "=" + values[i];
+        }
       }
     }
 
-    if (index == -1){
+    if (index == -1) {
       PrintHelper.printlnRed("Condition not found.");
       return false;
     }
@@ -128,8 +103,8 @@ public class ORM {
 
     int adjust = 0;
 
-    for (int j = 0; j < columns.length; j++){
-      if (j == index){
+    for (int j = 0; j < columns.length; j++) {
+      if (j == index) {
         adjust = 1;
       } else {
         newColumns[j-adjust] = columns[j];
@@ -137,16 +112,12 @@ public class ORM {
       }
     }
 
-    String query = this.database.generateUpdateStatement(tableName, newCondition, newColumns, newValues);
+    String query = this.database.generateUpdateStatement(tableName, newCondition,
+        newColumns, newValues);
     int res = this.database.runUpdate(query);
 
-    if (res < 0){
-      return false;
-    }
-
-    return true;
+    return res < 0;
   }
-
   public <T extends  IDataType> List<T> sql(String sqlQuery) {
     if (sqlQuery.toUpperCase().contains("SELECT")){
       if (sqlQuery.contains("FROM user")){
