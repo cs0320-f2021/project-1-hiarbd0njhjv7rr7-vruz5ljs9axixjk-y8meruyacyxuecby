@@ -18,12 +18,12 @@ import java.util.Locale;
 public class SQLite3Database implements IDatabase {
 
   private Connection conn;
-
-  public SQLite3Database(String dbName){
+  private final String classPrefix = "edu.brown.cs.student.main.";
+  public SQLite3Database(String dbName) {
     this.connectToDatabase(dbName);
   }
 
-  protected Connection establishConnection(String dbName){
+  protected Connection establishConnection(String dbName) {
     try {
       Class.forName("org.sqlite.JDBC");
       return DriverManager.getConnection("jdbc:sqlite:" + dbName);
@@ -48,7 +48,7 @@ public class SQLite3Database implements IDatabase {
       return resultSet.next();
     } catch (SQLException e) {
       e.printStackTrace();
-      System.out.println("ERROR: tableExists SQLException " + e);
+      System.out.println("ERROR: tableExists threw SQLException " + e);
     }
     return false;
   }
@@ -58,13 +58,15 @@ public class SQLite3Database implements IDatabase {
     // if no table, call generateCreate
     StringBuilder create = new StringBuilder("CREATE TABLE IF NOT EXISTS "
                                               + tableName + "(");
-    String delim = ",\n";
+    String delim = ",";
 
     for (int i = 0; i < columns.length; i++) {
       String currCol = columns[i];
       String currType = datatypes[i];
-      create.append(columns[i] + " " + datatypes[i]);
-      if (i == columns.length - 1) delim = ");";
+      create.append(columns[i]).append(" ").append(datatypes[i]);
+      if (i == columns.length - 1) {
+        delim = ");";
+      }
       create.append(delim);
     }
 
@@ -72,24 +74,20 @@ public class SQLite3Database implements IDatabase {
   }
 
   @Override
-  public String generateInsertStatement(String tableName, String[] columns, String[] values) {
-    StringBuilder insert = new StringBuilder("INSERT INTO " + tableName +" (");
-    StringBuilder placeholder = new StringBuilder(" VALUES \n (");
+  public String generateInsertStatement(String tableName, String[] columns,
+                                        String[] values) {
+    StringBuilder insert = new StringBuilder("INSERT INTO " + tableName + " VALUES (");
     String delim = "";
 
     for (int i = 0; i < columns.length; i++) {
-      String currColumn = columns[i];
       String currValue = values[i];
       insert.append(delim);
-      placeholder.append(delim);
+
       delim = ", ";
-      insert.append(currColumn);
-      placeholder.append(currValue);
+      insert.append(currValue);
     }
 
-    placeholder.append(");");
-    insert.append(")\n");
-    insert.append(placeholder.toString());
+    insert.append(");");
 
     return insert.toString();
   }
@@ -108,12 +106,12 @@ public class SQLite3Database implements IDatabase {
       where.append(currColumn);
       where.append(" = ");
       where.append(currValue);
-      delim = ", ";
+      delim = " AND ";
     }
 
     update.append(set);
 
-    if (!condition.equals("")){
+    if (!condition.equals("")) {
       update.append(where);
     }
     update.append(";");
@@ -122,12 +120,11 @@ public class SQLite3Database implements IDatabase {
 
   @Override
   public String generateDeleteStatement(String tableName, String[] columns, String[] values) {
-    StringBuilder delete = new StringBuilder("DELETE FROM " + tableName + "\n");
-    StringBuilder where = new StringBuilder("\nWHERE\n");
+    StringBuilder delete = new StringBuilder("DELETE FROM " + tableName + "\n" + "WHERE\n");
     String delim = "";
 
-    for (int i = 0; i < columns.length; i++){
-      where.append(delim).append(columns[i]).append("=").append(values[i]);
+    for (int i = 0; i < columns.length; i++) {
+      delete.append(delim).append(columns[i]).append("=").append(values[i]);
       delim = " AND ";
     }
 
@@ -149,6 +146,10 @@ public class SQLite3Database implements IDatabase {
       HashMap<String, String> columnNameToDataType = new HashMap<String, String>();
       HashMap<Integer, String> columnIndexToName = new HashMap<Integer, String>();
       String tableName = constructor.getName().toLowerCase();
+      if (tableName.startsWith(classPrefix)) {
+        // if it has edu.brown.cs.student.main. in the front, remove it
+        tableName = tableName.substring(classPrefix.length());
+      }
       String getColumnTypesQuery = "PRAGMA table_info(" + tableName +");";
       prep = conn.prepareStatement(getColumnTypesQuery);
       ResultSet rs = prep.executeQuery();
@@ -179,15 +180,16 @@ public class SQLite3Database implements IDatabase {
             String currColumnName = columnIndexToName.get(columnIndex);
             String currDataType = columnNameToDataType.get(currColumnName);
             if (currDataType.equals("INTEGER")) {
-              convertedArgs[columnIndex]=rs.getInt(columnIndex+1);
+              convertedArgs[columnIndex] = rs.getInt(columnIndex+1);
             } else if (currDataType.equals("TEXT")) {
-              convertedArgs[columnIndex]=rs.getString(columnIndex+1);
+              convertedArgs[columnIndex] = rs.getString(columnIndex+1);
             }
           }
 
           returnList.add(constructor.newInstance(convertedArgs));
         }
       }
+      prep.close();
 
       return returnList;
     } catch (SQLException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
@@ -201,7 +203,6 @@ public class SQLite3Database implements IDatabase {
     PreparedStatement prep;
     try {
       prep = conn.prepareStatement(query);
-      prep.close();
       int res = prep.executeUpdate();
       prep.close();
       return res;
