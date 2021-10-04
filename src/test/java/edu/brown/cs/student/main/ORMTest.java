@@ -40,6 +40,10 @@ public class ORMTest {
 
     assertTrue(orm.update(testRev, "id"));
     assertTrue(orm.where("id=?", "6", Review.class).contains(testRev));
+    assertTrue(orm.update(testRev, "id", "5"));
+    Review testRev5 = new Review(5, "5/5/12",
+        "nice clothes", "reviewText");
+    assertTrue(orm.where("id=?", "5", Review.class).contains(testRev5));
 
     ManageDB.delete(testDB);
   }

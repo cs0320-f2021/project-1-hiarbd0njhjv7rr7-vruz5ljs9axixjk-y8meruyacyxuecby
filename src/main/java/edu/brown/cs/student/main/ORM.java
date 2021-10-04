@@ -90,6 +90,7 @@ public class ORM {
         if (newCondition.equals("")) {
           newCondition = condition + "=" + values[i];
         }
+        break;
       }
     }
 
@@ -116,7 +117,7 @@ public class ORM {
         newColumns, newValues);
     int res = this.database.runUpdate(query);
 
-    return res < 0;
+    return res > 0;
   }
   public <T extends  IDataType> List<T> sql(String sqlQuery) {
     if (sqlQuery.toUpperCase().contains("SELECT")){
