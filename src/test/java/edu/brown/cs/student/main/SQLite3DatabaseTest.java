@@ -71,10 +71,9 @@ public class SQLite3DatabaseTest {
         new String[]{"4", "'5/5/12'", "'nice clothes'", "'bottom text'"});
     emptyDB.runUpdate(newInsertStatement);
     List<Review> reviewList = emptyDB.runQuery(selectStatement, constructor);
-    Review expected = new Review(4, "5/5/12",
+    Review testRev = new Review(4, "5/5/12",
         "'nice clothes'", "'reviewText'");
-
-    assertFalse(reviewList.isEmpty());
+    assertFalse(reviewList.contains(testRev));
 
   }
 }

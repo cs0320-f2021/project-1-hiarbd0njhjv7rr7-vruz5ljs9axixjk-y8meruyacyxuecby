@@ -55,8 +55,7 @@ public class ORM {
       constructor = (Constructor<? extends T>) cxtor;
     }
     String select = this.database.generateSelectStatement(tableName, newCondition);
-    this.database.runQuery(select, constructor);
-    return null;
+    return this.database.runQuery(select, constructor);
   }
 
   public <T extends  IDataType> boolean update(T object, String condition, String value) {
@@ -85,11 +84,11 @@ public class ORM {
     int adjust = 0;
 
     for (int j = 0; j < newColumns.length; j++){
-      if (j == index){
+      if (j == index) {
         adjust = 1;
       } else {
-        newColumns[j] = columns[j+adjust];
-        newValues[j] = values[j+adjust];
+        newColumns[j] = columns[j-adjust];
+        newValues[j] = values[j-adjust];
       }
     }
 
@@ -129,12 +128,12 @@ public class ORM {
 
     int adjust = 0;
 
-    for (int j = 0; j < newColumns.length; j++){
+    for (int j = 0; j < columns.length; j++){
       if (j == index){
         adjust = 1;
       } else {
-        newColumns[j] = columns[j+adjust];
-        newValues[j] = values[j+adjust];
+        newColumns[j-adjust] = columns[j];
+        newValues[j-adjust] = values[j];
       }
     }
 

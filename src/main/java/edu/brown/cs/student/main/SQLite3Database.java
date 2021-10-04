@@ -106,7 +106,7 @@ public class SQLite3Database implements IDatabase {
       where.append(currColumn);
       where.append(" = ");
       where.append(currValue);
-      delim = ", ";
+      delim = " AND ";
     }
 
     update.append(set);

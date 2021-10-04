@@ -11,10 +11,7 @@ public class  DeconstructedObject <T extends IDataType> {
   public DeconstructedObject(T object) {
     try {
       Class classType = object.getClass();
-      String className = classType.getName();
-      if (className.startsWith("edu.brown.cs.student.main.")) {
-        className = className.replace("edu.brown.cs.student.main.", "");
-      }
+      String className = classType.getSimpleName();
       Field[] fields = classType.getDeclaredFields();
       String[] columns = new String[fields.length];
       String[] values = new String[fields.length];
