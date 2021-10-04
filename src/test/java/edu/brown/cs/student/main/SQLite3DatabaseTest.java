@@ -3,6 +3,11 @@ package edu.brown.cs.student.main;
 
 import org.junit.Test;
 
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -40,5 +45,36 @@ public class SQLite3DatabaseTest {
         emptyDB.generateDeleteStatement("review",
             new String[]{"id", "reviewDate", "reviewSummary", "reviewText"},
             new String[]{"4", "'5/5/12'", "'nice clothes'", "'bottom text'"}));
+
+    String selectStatement = "SELECT * FROM review WHERE id=4;";
+
+    assertEquals(selectStatement,
+        emptyDB.generateSelectStatement("review", "id=4"));
+
+    emptyDB.runUpdate(reviewStatement);
+
+    assertTrue(emptyDB.tableExists("review"));
+
+    emptyDB.runUpdate(insertStatement);
+    // to test this I manually looked at the Database, and the data does
+    // show up
+
+
+    Constructor<Review> constructor = null;
+
+    for (Constructor<?> cxtor : Review.class.getConstructors()){
+      constructor = (Constructor<Review>) cxtor;
+    }
+
+    String newInsertStatement = emptyDB.generateInsertStatement("review",
+        reviewColumns,
+        new String[]{"4", "'5/5/12'", "'nice clothes'", "'bottom text'"});
+    emptyDB.runUpdate(newInsertStatement);
+    List<Review> reviewList = emptyDB.runQuery(selectStatement, constructor);
+    Review expected = new Review(4, "5/5/12",
+        "'nice clothes'", "'reviewText'");
+
+    assertFalse(reviewList.isEmpty());
+
   }
 }

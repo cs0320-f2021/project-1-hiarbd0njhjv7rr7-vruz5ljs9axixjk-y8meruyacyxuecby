@@ -29,10 +29,7 @@ public class ORM {
     String query = database.generateInsertStatement(tableName, columns, values);
     int res = database.runUpdate(query);
 
-    if (res > 0){
-      return true;
-    }
-    return false;
+    return res > 0;
   }
 
   public <T extends  IDataType> boolean delete(T object){

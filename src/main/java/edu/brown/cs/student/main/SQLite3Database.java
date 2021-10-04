@@ -18,7 +18,7 @@ import java.util.Locale;
 public class SQLite3Database implements IDatabase {
 
   private Connection conn;
-
+  private final String classPrefix = "edu.brown.cs.student.main.";
   public SQLite3Database(String dbName) {
     this.connectToDatabase(dbName);
   }
@@ -48,7 +48,7 @@ public class SQLite3Database implements IDatabase {
       return resultSet.next();
     } catch (SQLException e) {
       e.printStackTrace();
-      System.out.println("ERROR: tableExists SQLException " + e);
+      System.out.println("ERROR: tableExists threw SQLException " + e);
     }
     return false;
   }
@@ -146,6 +146,10 @@ public class SQLite3Database implements IDatabase {
       HashMap<String, String> columnNameToDataType = new HashMap<String, String>();
       HashMap<Integer, String> columnIndexToName = new HashMap<Integer, String>();
       String tableName = constructor.getName().toLowerCase();
+      if (tableName.startsWith(classPrefix)) {
+        // if it has edu.brown.cs.student.main. in the front, remove it
+        tableName = tableName.substring(classPrefix.length());
+      }
       String getColumnTypesQuery = "PRAGMA table_info(" + tableName +");";
       prep = conn.prepareStatement(getColumnTypesQuery);
       ResultSet rs = prep.executeQuery();
@@ -176,15 +180,16 @@ public class SQLite3Database implements IDatabase {
             String currColumnName = columnIndexToName.get(columnIndex);
             String currDataType = columnNameToDataType.get(currColumnName);
             if (currDataType.equals("INTEGER")) {
-              convertedArgs[columnIndex]=rs.getInt(columnIndex+1);
+              convertedArgs[columnIndex] = rs.getInt(columnIndex+1);
             } else if (currDataType.equals("TEXT")) {
-              convertedArgs[columnIndex]=rs.getString(columnIndex+1);
+              convertedArgs[columnIndex] = rs.getString(columnIndex+1);
             }
           }
 
           returnList.add(constructor.newInstance(convertedArgs));
         }
       }
+      prep.close();
 
       return returnList;
     } catch (SQLException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
@@ -198,7 +203,6 @@ public class SQLite3Database implements IDatabase {
     PreparedStatement prep;
     try {
       prep = conn.prepareStatement(query);
-      prep.close();
       int res = prep.executeUpdate();
       prep.close();
       return res;
