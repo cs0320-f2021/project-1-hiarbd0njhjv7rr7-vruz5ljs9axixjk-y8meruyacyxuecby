@@ -37,15 +37,28 @@ public class BloomList {
     Arrays.sort(_similarities, new Comparator<int[]>() { /** sorts array by cardinality sum */
     @Override
     public int compare(int[] one, int[] two) { /** defines new compare method */
-      if (one[1] > two[1]) {
+      if (one[1] < two[1]) {
         return 1;
       } else {
         return -1;
       }
     }
     });
-    for (int i = 0; i < k; i++){
-      System.out.println("UserID: " + _similarities[k][0]);
+
+    for (int i = 0; i < _similarities.length; i++){
+      System.out.println("UserID: " + _similarities[i][0] + " Card:" + _similarities[i][1]);
+    }
+    System.out.println();
+
+    if (k > _similarities.length){ /** if input k is larger than number of users */
+      for (int i = 0; i < _similarities.length; i++){
+        System.out.println("UserID: " + _similarities[i][0]);
+      }
+    }
+    else{
+      for (int i = 0; i < k; i++){
+        System.out.println("UserID: " + _similarities[i][0]);
+      }
     }
   }
 
@@ -57,7 +70,7 @@ public class BloomList {
    * the most similar!
    * @param target
    */
-  private void calculateSimilarity(BloomFilter target){
+  private void calculateSimilarity(BloomFilter target){ /** FIX THIS: it only finds the similarity of the first element SEE TESTS */
     this.reloadSimilarities();
     int c = 0;
     for (BloomFilter b: _filters){
@@ -71,9 +84,13 @@ public class BloomList {
           targetBits[2].cardinality();
       _similarities[c][0] = Integer.parseInt(b.getUserID()); //adds userID to column 1
       _similarities[c][1] = cardinalitySum; //adds cardinality sum to column 2
-      this.loadDefensiveCopy(target);
+      target = this.loadDefensiveCopy();
       c++;
     }
+    for (int i = 0; i < _similarities.length; i++){
+      System.out.println("UserID: " + _similarities[i][0] + " Card:" + _similarities[i][1]);
+    }
+    System.out.println();
   }
 
   /**
@@ -92,10 +109,17 @@ public class BloomList {
   }
 
   /**
-   * Loads defensive copy into the input BloomFilter bf
+   * Returns defensive copy of bf bloom filter from saveDefensiveCopy
    */
-  private void loadDefensiveCopy(BloomFilter bf) {
+  private BloomFilter loadDefensiveCopy() {
     BitSet[] sets = _defense.getBitSets();
-    bf = new BloomFilter(sets[0], sets[1], sets[2], _defense.getUserID());
+    return new BloomFilter(sets[0], sets[1], sets[2], _defense.getUserID());
+  }
+
+  /**
+   * Returns number of bloom filters in the BloomList
+   */
+  public int size(){
+    return _filters.size();
   }
 }
