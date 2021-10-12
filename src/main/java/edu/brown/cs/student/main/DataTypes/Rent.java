@@ -1,4 +1,4 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.DataTypes;
 
 public class Rent implements IDataType {
   final String fit;

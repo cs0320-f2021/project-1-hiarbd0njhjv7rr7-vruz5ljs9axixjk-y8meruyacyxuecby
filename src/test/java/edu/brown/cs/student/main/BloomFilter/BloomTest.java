@@ -1,4 +1,6 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.BloomFilter;
+import edu.brown.cs.student.main.BloomFilter.BloomFilter;
+import edu.brown.cs.student.main.BloomFilter.BloomList;
 import org.junit.Test;
 
 import java.io.IOException;

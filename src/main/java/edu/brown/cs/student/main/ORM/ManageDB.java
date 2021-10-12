@@ -1,4 +1,4 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.ORM;
 
 import java.io.File;
 import java.sql.Connection;

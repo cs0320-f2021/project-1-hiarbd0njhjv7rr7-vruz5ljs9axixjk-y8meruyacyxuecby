@@ -1,9 +1,9 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.ORM;
+
+import edu.brown.cs.student.main.DataTypes.IDataType;
 
 import java.lang.reflect.Constructor;
-import java.sql.SQLException;
 import java.util.List;
-import java.sql.ResultSet;
 
 public interface IDatabase {
 

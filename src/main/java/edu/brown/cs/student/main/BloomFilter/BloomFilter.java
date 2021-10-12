@@ -1,4 +1,4 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.BloomFilter;
 import java.io.IOException;
 import java.util.BitSet;
 
@@ -20,8 +20,8 @@ public class BloomFilter {
    * bloom filter.
    * Throws IO Exception if parsing goes wrong, which means the input in REPL was incorrect.
    */
-  BloomFilter(String weight, String bust, String height, int age,
-              String body, String horoscope, String userID) throws IOException {
+  public BloomFilter(String weight, String bust, String height, int age,
+                     String body, String horoscope, String userID) throws IOException {
     _userID = userID;
     _hasher = new Hasher();
     _fp = new FieldParser();

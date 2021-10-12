@@ -1,4 +1,4 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.BloomFilter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +13,7 @@ public class BloomList {
   /**
    * Constructor for BloomList.
    */
-  BloomList() {
+  public BloomList() {
     _filters = new ArrayList<BloomFilter>();
   }
 

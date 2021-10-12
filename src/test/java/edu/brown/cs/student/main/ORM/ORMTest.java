@@ -1,5 +1,6 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.ORM;
 
+import edu.brown.cs.student.main.DataTypes.Review;
 import org.junit.Test;
 
 import java.util.List;

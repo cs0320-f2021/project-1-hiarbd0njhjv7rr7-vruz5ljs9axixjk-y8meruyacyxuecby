@@ -1,10 +1,13 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.ORM;
+
+import edu.brown.cs.student.main.DataTypes.IDataType;
+import edu.brown.cs.student.main.PrintHelper;
+import edu.brown.cs.student.main.DataTypes.Rent;
+import edu.brown.cs.student.main.DataTypes.Review;
+import edu.brown.cs.student.main.DataTypes.User;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.Locale;
 
 
 public class ORM {
@@ -14,7 +17,7 @@ public class ORM {
     this.database = new SQLite3Database(dbName);
   }
 
-  public <T extends  IDataType> boolean insert(T object){
+  public <T extends IDataType> boolean insert(T object){
 
     DeconstructedObject<T> obj = new DeconstructedObject<T>(object);
     String tableName = obj.getClassName().toLowerCase();

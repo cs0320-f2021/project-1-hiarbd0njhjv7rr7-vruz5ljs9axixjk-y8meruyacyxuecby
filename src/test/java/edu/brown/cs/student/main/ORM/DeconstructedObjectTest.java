@@ -1,6 +1,7 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.ORM;
 
-import org.junit.Assert;
+import edu.brown.cs.student.main.DataTypes.Rent;
+import edu.brown.cs.student.main.DataTypes.User;
 import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;

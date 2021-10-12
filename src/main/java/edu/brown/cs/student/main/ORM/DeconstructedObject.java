@@ -1,4 +1,6 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.ORM;
+
+import edu.brown.cs.student.main.DataTypes.IDataType;
 
 import java.lang.reflect.Field;
 
@@ -22,6 +24,7 @@ public class  DeconstructedObject <T extends IDataType> {
         String currColumn = currField.getName();
         String currValue;
         Class<?> currClass = currField.getType();
+        currField.setAccessible(true);
         if (currClass.isAssignableFrom(Integer.class)) {
           currValue = ((Integer) currField.get(object)).toString();
           datatypes[i] = "INTEGER";

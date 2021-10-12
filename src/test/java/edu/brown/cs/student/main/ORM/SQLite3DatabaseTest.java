@@ -1,11 +1,10 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.ORM;
 
 
+import edu.brown.cs.student.main.DataTypes.Review;
 import org.junit.Test;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;

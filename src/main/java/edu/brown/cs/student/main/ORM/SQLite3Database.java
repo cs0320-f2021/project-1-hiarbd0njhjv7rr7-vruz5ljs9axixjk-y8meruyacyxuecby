@@ -1,8 +1,8 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.ORM;
 
-import javax.xml.transform.Result;
+import edu.brown.cs.student.main.DataTypes.IDataType;
+
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 public class SQLite3Database implements IDatabase {
 
@@ -145,11 +144,7 @@ public class SQLite3Database implements IDatabase {
     try {
       HashMap<String, String> columnNameToDataType = new HashMap<String, String>();
       HashMap<Integer, String> columnIndexToName = new HashMap<Integer, String>();
-      String tableName = constructor.getName().toLowerCase();
-      if (tableName.startsWith(classPrefix)) {
-        // if it has edu.brown.cs.student.main. in the front, remove it
-        tableName = tableName.substring(classPrefix.length());
-      }
+      String tableName = constructor.getDeclaringClass().getSimpleName();
       String getColumnTypesQuery = "PRAGMA table_info(" + tableName +");";
       prep = conn.prepareStatement(getColumnTypesQuery);
       ResultSet rs = prep.executeQuery();

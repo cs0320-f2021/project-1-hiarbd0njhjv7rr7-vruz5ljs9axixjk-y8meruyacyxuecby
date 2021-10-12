@@ -1,4 +1,5 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.BloomFilter;
+import edu.brown.cs.student.main.BloomFilter.FieldParser;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 

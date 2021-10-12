@@ -1,6 +1,5 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.DataTypes;
 
-import java.util.Date;
 import java.util.Objects;
 
 public class Review implements IDataType {

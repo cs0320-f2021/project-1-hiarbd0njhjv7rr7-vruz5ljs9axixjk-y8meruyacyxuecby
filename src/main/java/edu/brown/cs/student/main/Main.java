@@ -6,17 +6,18 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.Reader;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
 
+import edu.brown.cs.student.main.BloomFilter.BloomFilter;
+import edu.brown.cs.student.main.BloomFilter.BloomList;
+import edu.brown.cs.student.main.DataTypes.User;
+import edu.brown.cs.student.main.ORM.ORM;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -57,6 +58,7 @@ public final class Main {
    *
    * @throws IOException when an invalid command is given in the command line.
    */
+  @SuppressWarnings("checkstyle:MagicNumber")
   private void run() {
     // set up parsing of command line flags
     OptionParser parser = new OptionParser();
