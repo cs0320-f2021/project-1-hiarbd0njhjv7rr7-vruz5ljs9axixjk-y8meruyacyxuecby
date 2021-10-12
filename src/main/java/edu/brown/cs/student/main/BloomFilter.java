@@ -8,6 +8,7 @@ public class BloomFilter {
   private Hasher _hasher;
   private FieldParser _fp;
   private String _userID;
+  final int NUMBITS = 693;
 
   /**
    * BloomFilter constructor, called via the "users" command in REPL to load everything.
@@ -24,9 +25,9 @@ public class BloomFilter {
     _userID = userID;
     _hasher = new Hasher();
     _fp = new FieldParser();
-    _bitArrayHash1 = new BitSet(693);
-    _bitArrayHash2 = new BitSet(693);
-    _bitArrayHash3 = new BitSet(693);
+    _bitArrayHash1 = new BitSet(NUMBITS);
+    _bitArrayHash2 = new BitSet(NUMBITS);
+    _bitArrayHash3 = new BitSet(NUMBITS);
     _filter = new BitSet[3]; /** holds the three bit arrays (one for each hash) **/
     _filter[0] = _bitArrayHash1;
     _filter[1] = _bitArrayHash2;
@@ -61,11 +62,29 @@ public class BloomFilter {
   }
 
   /**
-   * Returns array of all 3 bitsets in the filter
+   * Returns array of all 3 bitsets in the filter such that they can't be modified
    * @return
    */
   public BitSet[] getBitSets() {
-    return _filter;
+    BitSet[] newSets = new BitSet[3];
+    BitSet newOne = new BitSet(NUMBITS);
+    BitSet newTwo = new BitSet(NUMBITS);
+    BitSet newThree = new BitSet(NUMBITS);
+    for (int i = 0; i < NUMBITS; i++){
+      if (_bitArrayHash1 != null && _bitArrayHash1.get(i) == true){
+        newOne.set(i);
+      }
+      if (_bitArrayHash2 != null && _bitArrayHash2.get(i) == true){
+        newTwo.set(i);
+      }
+      if (_bitArrayHash3 != null && _bitArrayHash3.get(i) == true){
+        newThree.set(i);
+      }
+    }
+    newSets[0] = newOne;
+    newSets[1] = newTwo;
+    newSets[2] = newThree;
+    return newSets;
   }
 
   /**

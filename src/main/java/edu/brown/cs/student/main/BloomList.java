@@ -7,8 +7,8 @@ import java.util.Comparator;
 
 public class BloomList {
   ArrayList<BloomFilter> _filters;
-  BloomFilter _defense;
   int[][] _similarities;
+  final int NUMBITS = 693;
 
   /**
    * Constructor for BloomList.
@@ -45,19 +45,14 @@ public class BloomList {
     }
     });
 
-    for (int i = 0; i < _similarities.length; i++){
-      System.out.println("UserID: " + _similarities[i][0] + " Card:" + _similarities[i][1]);
-    }
-    System.out.println();
-
-    if (k > _similarities.length){ /** if input k is larger than number of users */
+    if (k > _similarities.length){ /** if input k is larger than number of users, print the max */
       for (int i = 0; i < _similarities.length; i++){
-        System.out.println("UserID: " + _similarities[i][0]);
+        System.out.println("Similar #" + (i+1) + " UserID: " + _similarities[i][0]);
       }
     }
     else{
       for (int i = 0; i < k; i++){
-        System.out.println("UserID: " + _similarities[i][0]);
+        System.out.println("Similar #" + (i+1) + " UserID: " + _similarities[i][0]);
       }
     }
   }
@@ -70,27 +65,22 @@ public class BloomList {
    * the most similar!
    * @param target
    */
-  private void calculateSimilarity(BloomFilter target){ /** FIX THIS: it only finds the similarity of the first element SEE TESTS */
+  private void calculateSimilarity(BloomFilter target){ /** FIX THIS: it only finds the similarity of the first element added SEE TESTS */
     this.reloadSimilarities();
     int c = 0;
     for (BloomFilter b: _filters){
       BitSet[] bits = b.getBitSets();
-      this.saveDefensiveCopy(target); /** save defensive copy before AND operations, which modify */
       BitSet[] targetBits = target.getBitSets();
-      targetBits[0].and(bits[0]);
-      targetBits[1].and(bits[1]);
-      targetBits[2].and(bits[2]);
-      int cardinalitySum = targetBits[0].cardinality() + targetBits[1].cardinality() +
-          targetBits[2].cardinality();
+
+      int cardinalitySum = 0;
+      cardinalitySum += this.compareAnd(targetBits[0], bits[0]);
+      cardinalitySum += this.compareAnd(targetBits[1], bits[1]);
+      cardinalitySum += this.compareAnd(targetBits[2], bits[2]);
+
       _similarities[c][0] = Integer.parseInt(b.getUserID()); //adds userID to column 1
       _similarities[c][1] = cardinalitySum; //adds cardinality sum to column 2
-      target = this.loadDefensiveCopy();
       c++;
     }
-    for (int i = 0; i < _similarities.length; i++){
-      System.out.println("UserID: " + _similarities[i][0] + " Card:" + _similarities[i][1]);
-    }
-    System.out.println();
   }
 
   /**
@@ -101,19 +91,19 @@ public class BloomList {
   }
 
   /**
-   * Saves copy of bloom filter bf to reset after AND comparisons
+   * Conducts logical AND comparison of the two input bitsets
+   * @param first
+   * @param second
+   * @return
    */
-  private void saveDefensiveCopy(BloomFilter bf) {
-    BitSet[] sets = bf.getBitSets();
-    _defense = new BloomFilter(sets[0], sets[1], sets[2], bf.getUserID());
-  }
-
-  /**
-   * Returns defensive copy of bf bloom filter from saveDefensiveCopy
-   */
-  private BloomFilter loadDefensiveCopy() {
-    BitSet[] sets = _defense.getBitSets();
-    return new BloomFilter(sets[0], sets[1], sets[2], _defense.getUserID());
+  private int compareAnd(BitSet first, BitSet second){
+    int countAnd = 0;
+    for (int i = 0; i < NUMBITS; i++){
+      if (first.get(i) == true && second.get(i) == true){
+        countAnd++;
+      }
+    }
+    return countAnd;
   }
 
   /**
