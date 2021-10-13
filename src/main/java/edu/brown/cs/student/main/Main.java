@@ -16,8 +16,11 @@ import com.google.common.collect.ImmutableMap;
 
 import edu.brown.cs.student.main.BloomFilter.BloomFilter;
 import edu.brown.cs.student.main.BloomFilter.BloomList;
+import edu.brown.cs.student.main.DataTypes.Interests;
 import edu.brown.cs.student.main.DataTypes.Negative;
+import edu.brown.cs.student.main.DataTypes.Positive;
 import edu.brown.cs.student.main.DataTypes.User;
+import edu.brown.cs.student.main.DataTypes.Skills;
 import edu.brown.cs.student.main.ORM.ORM;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
@@ -206,6 +209,9 @@ public final class Main {
           } else if (input.equals("recsys_load responses")) {
             orm = new ORM("data/project-1/integration.sqlite3");
             List<Negative> negList = orm.sql("SELECT * FROM negative");
+            List<Positive> posList = orm.sql("SELECT * FROM positive");
+            List<Interests> interestList = orm.sql("SELECT * FROM interests");
+            List<Skills> skillsList = orm.sql("SELECT * FROM skills");
 
           } else {
             throw new IOException();

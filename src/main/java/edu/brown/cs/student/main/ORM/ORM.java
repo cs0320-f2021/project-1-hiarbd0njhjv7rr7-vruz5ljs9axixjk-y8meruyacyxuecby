@@ -122,24 +122,47 @@ public class ORM {
 
     return res > 0;
   }
-  public <T extends  IDataType> List<T> sql(String sqlQuery) {
+
+  /**
+   * Helper method to get constructor of any class declared in the project
+   * @param className name of Class constructor to get
+   * @param <T> - generic datatype extending IDataType
+   * @return constructor of target class
+   * @throws ClassNotFoundException - when class not found
+   */
+  private <T extends IDataType> Constructor<? extends T> getConstructor(String className) throws ClassNotFoundException {
+    Class<?> tClass = Class.forName(className);
+    for (Constructor<?> cxtor : tClass.getConstructors()) {
+      return (Constructor<? extends T>) cxtor;
+    }
+    return null;
+  }
+  /**
+   * Runs a given sqlQuery or update to the SQL database
+   * @param sqlQuery - query to run
+   * @param <T> - Datatype to return
+   * @throws ClassNotFoundException - when class is not founds
+   * @return List with results of query if a query, otherwise null
+   */
+  public <T extends  IDataType> List<T> sql(String sqlQuery) throws ClassNotFoundException {
     if (sqlQuery.toUpperCase().contains("SELECT")) {
       Constructor<? extends T> constructor = null;
+      String[] queryWords = sqlQuery.split(" ");
+      String targetClass = null;
 
-
-      if (sqlQuery.contains("FROM user")) {
-        for (Constructor<?> cxtor : User.class.getConstructors()) {
-          constructor = (Constructor<? extends T>) cxtor;
-        }
-      } else if (sqlQuery.contains("FROM rent")) {
-        for (Constructor<?> cxtor : Rent.class.getConstructors()) {
-          constructor = (Constructor<? extends T>) cxtor;
-        }
-      } else if (sqlQuery.contains("FROM review")) {
-        for (Constructor<?> cxtor : Review.class.getConstructors()) {
-          constructor = (Constructor<? extends T>) cxtor;
+      for (int i = 0; i < queryWords.length; i++) {
+        // check if FROM is not the last word
+        if (queryWords[i].equals("FROM") && (i + 1 < queryWords.length)) {
+          targetClass = queryWords[i + 1];
         }
       }
+      // Do we want this to happen?
+      if (targetClass == null) {
+        return null;
+      }
+
+      constructor = getConstructor(targetClass);
+
       if (constructor == null) {
         return null;
       }
