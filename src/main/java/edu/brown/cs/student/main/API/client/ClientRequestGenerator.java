@@ -27,4 +27,23 @@ public class ClientRequestGenerator {
               .build();
     return request;
   }
+
+  /**
+   * Similar to the secured GET request, but is a POST request instead.
+   *
+   * @param filepath - path to the URL to request from
+   * @return an HttpRequest object for accessing and posting to the secured resource.
+   */
+  public static HttpRequest getSecuredPostRequest(String filepath) {
+    String apiKey = ClientAuth.getApiKey();
+    String[] apiKeyArray = apiKey.split(" ");
+    String auth = apiKeyArray[0];
+    String password = apiKeyArray[1];
+    HttpRequest request = HttpRequest.newBuilder()
+        .uri(URI.create(filepath))
+        .header("x-api-key", password)
+        .POST(HttpRequest.BodyPublishers.ofString("{\"auth\":\"" + auth + "\"}"))
+        .build();
+    return request;
+  }
 }

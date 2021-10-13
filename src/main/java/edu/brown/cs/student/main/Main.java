@@ -14,8 +14,10 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
+import edu.brown.cs.student.main.API.main.ApiAggregator;
 import edu.brown.cs.student.main.BloomFilter.BloomFilter;
 import edu.brown.cs.student.main.BloomFilter.BloomList;
+import edu.brown.cs.student.main.DataTypes.Identity;
 import edu.brown.cs.student.main.DataTypes.Interests;
 import edu.brown.cs.student.main.DataTypes.Negative;
 import edu.brown.cs.student.main.DataTypes.Positive;
@@ -212,10 +214,10 @@ public final class Main {
             List<Positive> posList = orm.sql("SELECT * FROM positive");
             List<Interests> interestList = orm.sql("SELECT * FROM interests");
             List<Skills> skillsList = orm.sql("SELECT * FROM skills");
+            ApiAggregator api = new ApiAggregator();
+            List<Object> identities = api.getData("Identity");
 
-          } else {
-            throw new IOException();
-          }
+          } else throw new IOException();
         } catch (Exception e) {
           // e.printStackTrace();
           System.out.println("ERROR: We couldn't process your input");

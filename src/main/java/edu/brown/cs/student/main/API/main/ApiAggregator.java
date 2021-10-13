@@ -20,13 +20,13 @@ public class ApiAggregator {
   public List<Object> getData(String dataType) throws Exception {
     Gson gson = new Gson();
     Type type = setType(dataType);
-    String filename = "https://runwayapi.herokuapp.com/" + dataType + "-";
-    String response1 = client.makeRequest(ClientRequestGenerator.getSecuredRequest(filename + "one?auth="));
-    String response2 = client.makeRequest(ClientRequestGenerator.getSecuredRequest(filename + "three?auth="));
-    response1 = generateExtras("one",filename,response1);
-    response2 = generateExtras("two",filename,response2);
+    String filename = "https://runwayapi.herokuapp.com/integration";
+    String response1 = client.makeRequest(ClientRequestGenerator.getSecuredPostRequest(filename));
+    String response2 = client.makeRequest(ClientRequestGenerator.getSecuredPostRequest(filename));
+    response1 = generateExtras("", filename, response1);
+    response2 = generateExtras("", filename, response2);
     String best_response = response1.length() > response2.length() ? response1 : response2;
-    return gson.fromJson(best_response,type);
+    return gson.fromJson(best_response, type);
   }
 
   /**
@@ -41,7 +41,7 @@ public class ApiAggregator {
     try{
       for(int i = 0; i < 5; i++){
         if(response.equals(error_message)){
-          response = client.makeRequest(ClientRequestGenerator.getSecuredRequest(filename + server + "?auth="));
+          response = client.makeRequest(ClientRequestGenerator.getSecuredPostRequest(filename + server));
         }else break;
       }
     }catch (Exception ignored) {}
