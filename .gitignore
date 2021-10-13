@@ -10,3 +10,4 @@ target/
 .idea/
 **.DS_Store**
 >>>>>>> 4c72cc2ffac85ed68b167920e2249800b879cf17
+secret/apiKey.txt
