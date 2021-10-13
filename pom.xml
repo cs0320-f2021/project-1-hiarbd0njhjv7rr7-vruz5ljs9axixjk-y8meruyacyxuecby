@@ -6,11 +6,7 @@
   <!-- groupId is used to identify the organization -->
   <groupId>edu.brown.cs</groupId>
   <!-- artifactId is used to name the specific project -->
-<<<<<<< HEAD
   <artifactId>project-1</artifactId>
-=======
-  <artifactId>kdtree</artifactId>
->>>>>>> 4c72cc2ffac85ed68b167920e2249800b879cf17
   <!-- type of file you want to output -->
   <packaging>jar</packaging>
   <!-- Version of your project -->
