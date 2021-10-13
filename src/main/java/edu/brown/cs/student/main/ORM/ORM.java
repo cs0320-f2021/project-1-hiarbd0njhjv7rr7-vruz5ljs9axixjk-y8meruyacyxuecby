@@ -123,37 +123,31 @@ public class ORM {
     return res > 0;
   }
   public <T extends  IDataType> List<T> sql(String sqlQuery) {
-    if (sqlQuery.toUpperCase().contains("SELECT")){
-      if (sqlQuery.contains("FROM user")){
-        Constructor<? extends T> constructor = null;
+    if (sqlQuery.toUpperCase().contains("SELECT")) {
+      Constructor<? extends T> constructor = null;
 
-        for (Constructor<?> cxtor : User.class.getConstructors()){
+
+      if (sqlQuery.contains("FROM user")) {
+        for (Constructor<?> cxtor : User.class.getConstructors()) {
           constructor = (Constructor<? extends T>) cxtor;
         }
-
-        return this.database.runQuery(sqlQuery, constructor);
-      } else if (sqlQuery.contains("FROM rent")){
-        Constructor<? extends T> constructor = null;
-
-        for (Constructor<?> cxtor : Rent.class.getConstructors()){
+      } else if (sqlQuery.contains("FROM rent")) {
+        for (Constructor<?> cxtor : Rent.class.getConstructors()) {
           constructor = (Constructor<? extends T>) cxtor;
         }
-
-        return this.database.runQuery(sqlQuery, constructor);
-      } else if (sqlQuery.contains("FROM review")){
-        Constructor<? extends T> constructor = null;
-
-        for (Constructor<?> cxtor : Review.class.getConstructors()){
+      } else if (sqlQuery.contains("FROM review")) {
+        for (Constructor<?> cxtor : Review.class.getConstructors()) {
           constructor = (Constructor<? extends T>) cxtor;
         }
-
-        return this.database.runQuery(sqlQuery, constructor);
       }
+      if (constructor == null) {
+        return null;
+      }
+      return this.database.runQuery(sqlQuery, constructor);
     } else {
       this.database.runUpdate(sqlQuery);
       return null;
     }
-    return null;
   }
 
 }

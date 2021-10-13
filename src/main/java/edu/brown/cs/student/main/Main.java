@@ -16,6 +16,7 @@ import com.google.common.collect.ImmutableMap;
 
 import edu.brown.cs.student.main.BloomFilter.BloomFilter;
 import edu.brown.cs.student.main.BloomFilter.BloomList;
+import edu.brown.cs.student.main.DataTypes.Negative;
 import edu.brown.cs.student.main.DataTypes.User;
 import edu.brown.cs.student.main.ORM.ORM;
 import freemarker.template.Configuration;
@@ -85,6 +86,7 @@ public final class Main {
           input = input.trim();
           String[] arguments = input.split(" ");
           MathBot mb = new MathBot();
+
           if (arguments[0].equals("add") && arguments.length == 3) {
             System.out.println(mb.add(Double.parseDouble(arguments[1]), Double.parseDouble(arguments
                 [2])));
@@ -200,6 +202,11 @@ public final class Main {
             BloomFilter toCompare = new BloomFilter(arguments[2], arguments[3], arguments[4],
                 Integer.parseInt(arguments[5]), arguments[6], arguments[7], "1");
             bloomFilters.findKSimilar(toCompare, k);
+
+          } else if (input.equals("recsys_load responses")) {
+            orm = new ORM("data/project-1/integration.sqlite3");
+            List<Negative> negList = orm.sql("SELECT * FROM negative");
+
           } else {
             throw new IOException();
           }
