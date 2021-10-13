@@ -1,8 +1,12 @@
 target/
 .mvn-classpath
 .classpath
+<<<<<<< HEAD
 .project
 .idea/
 **.DS_Store**
 *.prefs
-/secret/apiKey.txt
+=======
+.idea/
+**.DS_Store**
+>>>>>>> 4c72cc2ffac85ed68b167920e2249800b879cf17
