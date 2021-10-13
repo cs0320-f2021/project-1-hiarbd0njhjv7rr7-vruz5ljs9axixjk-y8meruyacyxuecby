@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +24,9 @@ import edu.brown.cs.student.main.DataTypes.Positive;
 import edu.brown.cs.student.main.DataTypes.User;
 import edu.brown.cs.student.main.DataTypes.Skills;
 import edu.brown.cs.student.main.ORM.ORM;
+import edu.brown.cs.student.main.REPL.AddHandler;
+import edu.brown.cs.student.main.REPL.REPLCommandHandler;
+import edu.brown.cs.student.main.REPL.SubtractHandler;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -90,134 +95,160 @@ public final class Main {
           String[] arguments = input.split(" ");
           MathBot mb = new MathBot();
 
-          if (arguments[0].equals("add") && arguments.length == 3) {
-            System.out.println(mb.add(Double.parseDouble(arguments[1]), Double.parseDouble(arguments
-                [2])));
-          } else if (arguments[0].equals("subtract") && arguments.length == 3) {
-            System.out.println(mb.subtract(Double.parseDouble(arguments[1]), Double.
-                parseDouble(arguments[2])));
-          } else if (arguments[0].equals("stars") && arguments.length == 2) {
-            try {
-              String filename = arguments[1];
-              BufferedReader readsize = new BufferedReader(new FileReader(filename));
-              int count = -1; /** negative one to cut out the column headers line */
-              String line;
-              while ((line = readsize.readLine()) != null) {
-                count += 1;
-              }
-              sheet = new String[count][6]; /** load data by storing in 2D array */
-              BufferedReader readsave = new BufferedReader(new FileReader(filename));
-              count = -1;
-              String row;
-              while ((row = readsave.readLine()) != null) {
-                if (count == -1) {
-                  count += 1;
-                } else {
-                  String[] columns = row.split(",");
-                  sheet[count][0] = columns[0];
-                  sheet[count][1] = columns[1];
-                  sheet[count][2] = columns[2];
-                  sheet[count][3] = columns[3];
-                  sheet[count][4] = columns[4];
-                  sheet[count][5] = "0"; /** this column represents distance from given coords */
-                  count += 1;
-                }
-              }
-              System.out.println("Read " + count + " stars from " + filename);
-            } catch (Exception e) {
-              throw new IOException();
-            }
-          } else if (arguments.length == 5 && arguments[0].equals("naive_neighbors")) {
-            int k = Integer.parseInt(arguments[1]);
-            if (k > sheet.length) { /** cannot return k stars if k > # of stars */
-              throw new IOException();
-            }
-            double x = Double.parseDouble(arguments[2]);
-            double y = Double.parseDouble(arguments[3]);
-            double z = Double.parseDouble(arguments[4]);
-            this.fillDistances(sheet, x, y, z);
-            this.sortCSVData(sheet);
-            this.printKNearest(sheet, k, ",");
-          } else if (arguments[0].equals("naive_neighbors")) {
-            int k = Integer.parseInt(arguments[1]);
-            if (k > sheet.length) { /** cannot return k stars if k > # of stars */
-              throw new IOException();
-            }
-            String name = "";
-            for (int i = 2; i < arguments.length; i++) { /** builds name from arguments */
-              if (i == 2) {
-                name += arguments[2].substring(1);
-              } else {
-                name += " ";
-                name += arguments[i];
-              }
-              if (i == arguments.length - 1) {
-                name = name.substring(0, name.length() - 1);
-              }
-            }
-            double x = Double.MAX_VALUE;
-            double y = 0;
-            double z = 0;
-            for (int i = 0; i < sheet.length; i++) {
-              if (sheet[i][1].equals(name)) {
-                x = Double.parseDouble(sheet[i][2]);
-                y = Double.parseDouble(sheet[i][3]);
-                z = Double.parseDouble(sheet[i][4]);
-                break;
-              }
-            }
-            if (x == Double.MAX_VALUE) { /** this means no star was found with the name */
-              throw new IOException();
-            }
-            this.fillDistances(sheet, x, y, z);
-            this.sortCSVData(sheet);
-            this.printKNearest(sheet, k, name);
-          } else if (arguments[0].equals("users") && arguments.length == 2) {
-            bloomFilters = new BloomList();
-            /** Create new bloom filter for every entry in arguments[1] specified file,
-            then add to bloomFilters BloomList */
-            if (arguments[1].endsWith(".sqlite3")) { //only works with sqlite databases
-              orm = new ORM(arguments[1]);
-              List<User> userList = orm.sql("SELECT * FROM user");
-              for (User user : userList) {
-                bloomFilters.insert(user.makeBloomFilter());
-              }
-            }
+          Map<String, Class<? extends REPLCommandHandler>> commands = Map.of(
+              "add", AddHandler.class,
+              "subtract", SubtractHandler.class
+          );
 
-          } else if (arguments[0].equals("similar") && arguments.length == 3) { //TODO
-            //create desired bloom filter from data in SQL database
-            //compare to arraylist using AND or XNOR
-            //save and return k most similar
-            if (orm == null) {
-              throw new IOException("ERROR: Database not loaded!");
-            }
-            int k = Integer.parseInt(arguments[1]);
-            List<User> resultList = orm.where("user_id", arguments[2], User.class);
-            if (!resultList.isEmpty()) {
-              BloomFilter toCompare = resultList.get(0).makeBloomFilter();
-              bloomFilters.findKSimilar(toCompare, k);
-            } else {
-              throw new IOException("ERROR: No such user_id");
-            }
-          } else if (arguments[0].equals("similar") && arguments.length == 8) {
-            int k = Integer.parseInt(arguments[1]);
-            /** creates bloom filter from given arguments with userID 1 (irrelevant) */
-            BloomFilter toCompare = new BloomFilter(arguments[2], arguments[3], arguments[4],
-                Integer.parseInt(arguments[5]), arguments[6], arguments[7], "1");
-            bloomFilters.findKSimilar(toCompare, k);
+          Map<String,REPLCommandHandler> existingCommands = new HashMap<>();
 
-          } else if (input.equals("recsys_load responses")) {
-            orm = new ORM("data/project-1/integration.sqlite3");
-            List<Negative> negList = orm.sql("SELECT * FROM negative");
-            List<Positive> posList = orm.sql("SELECT * FROM positive");
-            List<Interests> interestList = orm.sql("SELECT * FROM interests");
-            List<Skills> skillsList = orm.sql("SELECT * FROM skills");
+          if (existingCommands.get(arguments[0]) == null){
 
-          } else {
-            throw new IOException();
+            Class<? extends REPLCommandHandler> rep = commands.get(arguments[0]);
+            Constructor<? extends REPLCommandHandler> constructor = null;
+
+            for (Constructor<?> cxtor : rep.getConstructors()){
+              constructor = (Constructor<? extends REPLCommandHandler>) cxtor;
+              break;
+            }
+            
+            assert constructor != null;
+            REPLCommandHandler newCommandHandler = constructor.newInstance();
+            existingCommands.put(arguments[0], newCommandHandler);
           }
+
+          REPLCommandHandler commandHandler = existingCommands.get(arguments[0]);
+          commandHandler.parseCommand(arguments);
+
+
+//          if (arguments[0].equals("add") && arguments.length == 3) {
+//            AddHandler ah = new AddHandler(arguments);
+//            ah.parseCommand();
+//          } else if (arguments[0].equals("subtract") && arguments.length == 3) {
+//            System.out.println(mb.subtract(Double.parseDouble(arguments[1]), Double.
+//                parseDouble(arguments[2])));
+//          } else if (arguments[0].equals("stars") && arguments.length == 2) {
+//            try {
+//              String filename = arguments[1];
+//              BufferedReader readsize = new BufferedReader(new FileReader(filename));
+//              int count = -1; /** negative one to cut out the column headers line */
+//              String line;
+//              while ((line = readsize.readLine()) != null) {
+//                count += 1;
+//              }
+//              sheet = new String[count][6]; /** load data by storing in 2D array */
+//              BufferedReader readsave = new BufferedReader(new FileReader(filename));
+//              count = -1;
+//              String row;
+//              while ((row = readsave.readLine()) != null) {
+//                if (count == -1) {
+//                  count += 1;
+//                } else {
+//                  String[] columns = row.split(",");
+//                  sheet[count][0] = columns[0];
+//                  sheet[count][1] = columns[1];
+//                  sheet[count][2] = columns[2];
+//                  sheet[count][3] = columns[3];
+//                  sheet[count][4] = columns[4];
+//                  sheet[count][5] = "0"; /** this column represents distance from given coords */
+//                  count += 1;
+//                }
+//              }
+//              System.out.println("Read " + count + " stars from " + filename);
+//            } catch (Exception e) {
+//              throw new IOException();
+//            }
+//          } else if (arguments.length == 5 && arguments[0].equals("naive_neighbors")) {
+//            int k = Integer.parseInt(arguments[1]);
+//            if (k > sheet.length) { /** cannot return k stars if k > # of stars */
+//              throw new IOException();
+//            }
+//            double x = Double.parseDouble(arguments[2]);
+//            double y = Double.parseDouble(arguments[3]);
+//            double z = Double.parseDouble(arguments[4]);
+//            this.fillDistances(sheet, x, y, z);
+//            this.sortCSVData(sheet);
+//            this.printKNearest(sheet, k, ",");
+//          } else if (arguments[0].equals("naive_neighbors")) {
+//            int k = Integer.parseInt(arguments[1]);
+//            if (k > sheet.length) { /** cannot return k stars if k > # of stars */
+//              throw new IOException();
+//            }
+//            String name = "";
+//            for (int i = 2; i < arguments.length; i++) { /** builds name from arguments */
+//              if (i == 2) {
+//                name += arguments[2].substring(1);
+//              } else {
+//                name += " ";
+//                name += arguments[i];
+//              }
+//              if (i == arguments.length - 1) {
+//                name = name.substring(0, name.length() - 1);
+//              }
+//            }
+//            double x = Double.MAX_VALUE;
+//            double y = 0;
+//            double z = 0;
+//            for (int i = 0; i < sheet.length; i++) {
+//              if (sheet[i][1].equals(name)) {
+//                x = Double.parseDouble(sheet[i][2]);
+//                y = Double.parseDouble(sheet[i][3]);
+//                z = Double.parseDouble(sheet[i][4]);
+//                break;
+//              }
+//            }
+//            if (x == Double.MAX_VALUE) { /** this means no star was found with the name */
+//              throw new IOException();
+//            }
+//            this.fillDistances(sheet, x, y, z);
+//            this.sortCSVData(sheet);
+//            this.printKNearest(sheet, k, name);
+//          } else if (arguments[0].equals("users") && arguments.length == 2) {
+//            bloomFilters = new BloomList();
+//            /** Create new bloom filter for every entry in arguments[1] specified file,
+//            then add to bloomFilters BloomList */
+//            if (arguments[1].endsWith(".sqlite3")) { //only works with sqlite databases
+//              orm = new ORM(arguments[1]);
+//              List<User> userList = orm.sql("SELECT * FROM user");
+//              for (User user : userList) {
+//                bloomFilters.insert(user.makeBloomFilter());
+//              }
+//            }
+//
+//          } else if (arguments[0].equals("similar") && arguments.length == 3) { //TODO
+//            //create desired bloom filter from data in SQL database
+//            //compare to arraylist using AND or XNOR
+//            //save and return k most similar
+//            if (orm == null) {
+//              throw new IOException("ERROR: Database not loaded!");
+//            }
+//            int k = Integer.parseInt(arguments[1]);
+//            List<User> resultList = orm.where("user_id", arguments[2], User.class);
+//            if (!resultList.isEmpty()) {
+//              BloomFilter toCompare = resultList.get(0).makeBloomFilter();
+//              bloomFilters.findKSimilar(toCompare, k);
+//            } else {
+//              throw new IOException("ERROR: No such user_id");
+//            }
+//          } else if (arguments[0].equals("similar") && arguments.length == 8) {
+//            int k = Integer.parseInt(arguments[1]);
+//            /** creates bloom filter from given arguments with userID 1 (irrelevant) */
+//            BloomFilter toCompare = new BloomFilter(arguments[2], arguments[3], arguments[4],
+//                Integer.parseInt(arguments[5]), arguments[6], arguments[7], "1");
+//            bloomFilters.findKSimilar(toCompare, k);
+//
+//          } else if (input.equals("recsys_load responses")) {
+//            orm = new ORM("data/project-1/integration.sqlite3");
+//            List<Negative> negList = orm.sql("SELECT * FROM negative");
+//            List<Positive> posList = orm.sql("SELECT * FROM positive");
+//            List<Interests> interestList = orm.sql("SELECT * FROM interests");
+//            List<Skills> skillsList = orm.sql("SELECT * FROM skills");
+//
+//          } else {
+//            throw new IOException();
+//          }
         } catch (Exception e) {
-          // e.printStackTrace();
+           e.printStackTrace();
           System.out.println("ERROR: We couldn't process your input");
         }
       }
