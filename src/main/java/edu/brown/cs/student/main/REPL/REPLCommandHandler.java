@@ -4,4 +4,7 @@ public interface REPLCommandHandler {
   boolean checkValidCommand(String[] args);
 
   Object parseCommand(String[] args);
+
+  String[] relevantCommands();
+
 }

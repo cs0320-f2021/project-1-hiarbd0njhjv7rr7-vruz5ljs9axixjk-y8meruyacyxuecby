@@ -28,6 +28,11 @@ public class SubtractHandler implements REPLCommandHandler {
     return null;
   }
 
+  @Override
+  public String[] relevantCommands() {
+    return new String[]{"subtract"};
+  }
+
   public SubtractHandler(){
 
   }

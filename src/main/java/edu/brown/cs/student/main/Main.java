@@ -111,15 +111,17 @@ public final class Main {
               constructor = (Constructor<? extends REPLCommandHandler>) cxtor;
               break;
             }
-            
+
             assert constructor != null;
             REPLCommandHandler newCommandHandler = constructor.newInstance();
-            existingCommands.put(arguments[0], newCommandHandler);
+            String[] relatedCommands = newCommandHandler.relevantCommands();
+            for (String relatedCommand : relatedCommands) {
+              existingCommands.put(relatedCommand, newCommandHandler);
+            }
           }
 
           REPLCommandHandler commandHandler = existingCommands.get(arguments[0]);
           commandHandler.parseCommand(arguments);
-
 
 //          if (arguments[0].equals("add") && arguments.length == 3) {
 //            AddHandler ah = new AddHandler(arguments);

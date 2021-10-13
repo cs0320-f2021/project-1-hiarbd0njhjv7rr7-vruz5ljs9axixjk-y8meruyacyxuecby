@@ -28,6 +28,11 @@ public class AddHandler implements REPLCommandHandler {
     return null;
   }
 
+  @Override
+  public String[] relevantCommands() {
+    return new String[]{"add"};
+  }
+
   public AddHandler(){
 
   }
