@@ -25,7 +25,9 @@ import edu.brown.cs.student.main.DataTypes.User;
 import edu.brown.cs.student.main.DataTypes.Skills;
 import edu.brown.cs.student.main.ORM.ORM;
 import edu.brown.cs.student.main.REPL.AddHandler;
+import edu.brown.cs.student.main.REPL.BadCommandException;
 import edu.brown.cs.student.main.REPL.REPLCommandHandler;
+import edu.brown.cs.student.main.REPL.StarHandler;
 import edu.brown.cs.student.main.REPL.SubtractHandler;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
@@ -86,25 +88,28 @@ public final class Main {
 
     try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
       String input;
-      String[][] sheet = new String[1][1];
-      BloomList bloomFilters = new BloomList();
-      ORM orm = null;
+//      String[][] sheet = new String[1][1];
+//      BloomList bloomFilters = new BloomList();
+//      ORM orm = null;
+      Map<String, Class<? extends REPLCommandHandler>> commands = Map.of(
+          "add", AddHandler.class,
+          "subtract", SubtractHandler.class,
+          "stars", StarHandler.class
+      );
+
+      Map<String,REPLCommandHandler> existingCommands = new HashMap<>();
+      
       while ((input = br.readLine()) != null) {
         try {
           input = input.trim();
           String[] arguments = input.split(" ");
-          MathBot mb = new MathBot();
-
-          Map<String, Class<? extends REPLCommandHandler>> commands = Map.of(
-              "add", AddHandler.class,
-              "subtract", SubtractHandler.class
-          );
-
-          Map<String,REPLCommandHandler> existingCommands = new HashMap<>();
 
           if (existingCommands.get(arguments[0]) == null){
 
             Class<? extends REPLCommandHandler> rep = commands.get(arguments[0]);
+            if (rep == null){
+              throw new BadCommandException(new String[]{"You have entered an invalid command"});
+            }
             Constructor<? extends REPLCommandHandler> constructor = null;
 
             for (Constructor<?> cxtor : rep.getConstructors()){
@@ -123,89 +128,7 @@ public final class Main {
           REPLCommandHandler commandHandler = existingCommands.get(arguments[0]);
           commandHandler.parseCommand(arguments);
 
-//          if (arguments[0].equals("add") && arguments.length == 3) {
-//            AddHandler ah = new AddHandler(arguments);
-//            ah.parseCommand();
-//          } else if (arguments[0].equals("subtract") && arguments.length == 3) {
-//            System.out.println(mb.subtract(Double.parseDouble(arguments[1]), Double.
-//                parseDouble(arguments[2])));
-//          } else if (arguments[0].equals("stars") && arguments.length == 2) {
-//            try {
-//              String filename = arguments[1];
-//              BufferedReader readsize = new BufferedReader(new FileReader(filename));
-//              int count = -1; /** negative one to cut out the column headers line */
-//              String line;
-//              while ((line = readsize.readLine()) != null) {
-//                count += 1;
-//              }
-//              sheet = new String[count][6]; /** load data by storing in 2D array */
-//              BufferedReader readsave = new BufferedReader(new FileReader(filename));
-//              count = -1;
-//              String row;
-//              while ((row = readsave.readLine()) != null) {
-//                if (count == -1) {
-//                  count += 1;
-//                } else {
-//                  String[] columns = row.split(",");
-//                  sheet[count][0] = columns[0];
-//                  sheet[count][1] = columns[1];
-//                  sheet[count][2] = columns[2];
-//                  sheet[count][3] = columns[3];
-//                  sheet[count][4] = columns[4];
-//                  sheet[count][5] = "0"; /** this column represents distance from given coords */
-//                  count += 1;
-//                }
-//              }
-//              System.out.println("Read " + count + " stars from " + filename);
-//            } catch (Exception e) {
-//              throw new IOException();
-//            }
-//          } else if (arguments.length == 5 && arguments[0].equals("naive_neighbors")) {
-//            int k = Integer.parseInt(arguments[1]);
-//            if (k > sheet.length) { /** cannot return k stars if k > # of stars */
-//              throw new IOException();
-//            }
-//            double x = Double.parseDouble(arguments[2]);
-//            double y = Double.parseDouble(arguments[3]);
-//            double z = Double.parseDouble(arguments[4]);
-//            this.fillDistances(sheet, x, y, z);
-//            this.sortCSVData(sheet);
-//            this.printKNearest(sheet, k, ",");
-//          } else if (arguments[0].equals("naive_neighbors")) {
-//            int k = Integer.parseInt(arguments[1]);
-//            if (k > sheet.length) { /** cannot return k stars if k > # of stars */
-//              throw new IOException();
-//            }
-//            String name = "";
-//            for (int i = 2; i < arguments.length; i++) { /** builds name from arguments */
-//              if (i == 2) {
-//                name += arguments[2].substring(1);
-//              } else {
-//                name += " ";
-//                name += arguments[i];
-//              }
-//              if (i == arguments.length - 1) {
-//                name = name.substring(0, name.length() - 1);
-//              }
-//            }
-//            double x = Double.MAX_VALUE;
-//            double y = 0;
-//            double z = 0;
-//            for (int i = 0; i < sheet.length; i++) {
-//              if (sheet[i][1].equals(name)) {
-//                x = Double.parseDouble(sheet[i][2]);
-//                y = Double.parseDouble(sheet[i][3]);
-//                z = Double.parseDouble(sheet[i][4]);
-//                break;
-//              }
-//            }
-//            if (x == Double.MAX_VALUE) { /** this means no star was found with the name */
-//              throw new IOException();
-//            }
-//            this.fillDistances(sheet, x, y, z);
-//            this.sortCSVData(sheet);
-//            this.printKNearest(sheet, k, name);
-//          } else if (arguments[0].equals("users") && arguments.length == 2) {
+//          if (arguments[0].equals("users") && arguments.length == 2) {
 //            bloomFilters = new BloomList();
 //            /** Create new bloom filter for every entry in arguments[1] specified file,
 //            then add to bloomFilters BloomList */
@@ -245,10 +168,10 @@ public final class Main {
 //            List<Positive> posList = orm.sql("SELECT * FROM positive");
 //            List<Interests> interestList = orm.sql("SELECT * FROM interests");
 //            List<Skills> skillsList = orm.sql("SELECT * FROM skills");
-//
 //          } else {
 //            throw new IOException();
 //          }
+
         } catch (Exception e) {
            e.printStackTrace();
           System.out.println("ERROR: We couldn't process your input");
@@ -260,72 +183,7 @@ public final class Main {
     }
   }
 
-  /**
-   * Calculates distance between two points given by x/y/z 1 and 2.
-   * @param x1
-   * @param y1
-   * @param z1
-   * @param x2
-   * @param y2
-   * @param z2
-   * @return distance between points 1 and 2
-   */
-  private double distanceFormula(double x1, double y1, double z1, double x2, double y2, double z2) {
-    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2) + Math.pow(z2 - z1, 2));
-  }
 
-  /**
-   * Intakes x, y, and z positions of desired location, then fills in the last column of sheet
-   * to represent the distance from each star to the location.
-   * @param sheet 2D array of CSV data
-   * @param x
-   * @param y
-   * @param z
-   */
-  private void fillDistances(String[][] sheet, Double x, Double y, Double z) {
-    for (int i = 0; i < sheet.length; i++) {
-      sheet[i][5] = Double.toString(this.distanceFormula(x, y, z,
-          Double.parseDouble(sheet[i][2]), Double.parseDouble(sheet[i][3]),
-          Double.parseDouble(sheet[i][4])));
-    }
-  }
-
-  /**
-   * Intakes 2D array of CSV data, then sorts it based on the distance column from closest
-   * to furthest away.
-   * @param sheet
-   * CREDIT FOR 2D SORT METHOD: https://www.delftstack.com/howto/java/sort-2d-array-java/
-   */
-  private void sortCSVData(String[][] sheet) {
-    Arrays.sort(sheet, new Comparator<String[]>() { /** sorts array by fifth column, distance */
-      @Override
-      public int compare(String[] one, String[] two) { /** defines new compare method */
-        if (Double.parseDouble(one[5]) > Double.parseDouble(two[5])) {
-          return 1;
-        } else {
-          return -1;
-        }
-      }
-    });
-  }
-
-  /**
-   * Prints star IDs of the k nearest neighbors from the sorted sheet.
-   * @param sheet
-   * @param k
-   * @param name: name of the specified star; this isn't included in printed nearest neighbors
-   */
-  private void printKNearest(String[][] sheet, int k, String name) {
-    for (int i = 0; i < k; i++) { /** prints k nearest neighbors, excluding the specified star */
-      if (!sheet[i][1].equals(name)) {
-        System.out.println(sheet[i][0]);
-      } else {
-        if (sheet.length < k) {
-          k += 1;
-        }
-      }
-    }
-  }
 
   private static FreeMarkerEngine createEngine() {
     Configuration config = new Configuration(Configuration.VERSION_2_3_0);

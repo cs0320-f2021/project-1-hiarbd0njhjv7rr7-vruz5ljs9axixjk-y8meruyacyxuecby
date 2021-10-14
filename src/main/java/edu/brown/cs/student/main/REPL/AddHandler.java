@@ -33,7 +33,5 @@ public class AddHandler implements REPLCommandHandler {
     return new String[]{"add"};
   }
 
-  public AddHandler(){
-
-  }
+  public AddHandler(){}
 }
