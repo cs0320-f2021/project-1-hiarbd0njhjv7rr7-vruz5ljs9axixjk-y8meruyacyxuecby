@@ -59,7 +59,6 @@ public class UsersHandler implements REPLCommandHandler{
     BloomFilter toCompare = new BloomFilter(args[2], args[3], args[4],
         Integer.parseInt(args[5]), args[6], args[7], "1");
     bloomFilters.findKSimilar(toCompare, k);
-//
   }
 
   @Override

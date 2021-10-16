@@ -1,6 +1,6 @@
 package edu.brown.cs.student.main.DataTypes;
 
-public class Skills implements IDataType {
+public class Skill implements IDataType {
   private int id;
   private String name;
   private int commenting;
@@ -10,7 +10,7 @@ public class Skills implements IDataType {
   private int teamwork;
   private int frontend;
 
-  public Skills(int id, String name, int commenting, int testing, int OOP, int algorithms,
+  public Skill(int id, String name, int commenting, int testing, int OOP, int algorithms,
                 int teamwork, int frontend) {
     this.id = id;
     this.name = name;

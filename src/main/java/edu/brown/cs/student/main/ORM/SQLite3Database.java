@@ -26,7 +26,6 @@ public class SQLite3Database implements IDatabase {
   protected Connection establishConnection(String dbName) {
     try {
       Class.forName("org.sqlite.JDBC");
-      System.out.println("Working Directory = " + System.getProperty("user.dir"));
       return DriverManager.getConnection("jdbc:sqlite:" + dbName);
     } catch (ClassNotFoundException | SQLException e) {
       e.printStackTrace();

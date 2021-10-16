@@ -16,8 +16,7 @@ public class User implements IDataType {
   public User(String user_id, String weight, String bust_size, String height,
               String age, String body_type, String horoscope) {
     this.user_id = Integer.parseInt(user_id);
-    this.weight = weight;//Integer.parseInt(weight.replace("lbs",""));
-    System.out.println(this.weight);
+    this.weight = weight;
     this.bust_size = bust_size;
     this.height = getHeight(height);
     this.age = Integer.parseInt(age);

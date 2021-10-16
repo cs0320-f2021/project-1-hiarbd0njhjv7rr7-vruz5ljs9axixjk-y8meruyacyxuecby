@@ -18,15 +18,16 @@ import com.google.common.collect.ImmutableMap;
 
 import edu.brown.cs.student.main.BloomFilter.BloomFilter;
 import edu.brown.cs.student.main.BloomFilter.BloomList;
-import edu.brown.cs.student.main.DataTypes.Interests;
+import edu.brown.cs.student.main.DataTypes.Interest;
 import edu.brown.cs.student.main.DataTypes.Negative;
 import edu.brown.cs.student.main.DataTypes.Positive;
 import edu.brown.cs.student.main.DataTypes.User;
-import edu.brown.cs.student.main.DataTypes.Skills;
+import edu.brown.cs.student.main.DataTypes.Skill;
 import edu.brown.cs.student.main.ORM.ORM;
 import edu.brown.cs.student.main.REPL.AddHandler;
 import edu.brown.cs.student.main.REPL.BadCommandException;
 import edu.brown.cs.student.main.REPL.REPLCommandHandler;
+import edu.brown.cs.student.main.REPL.RecommenderSystemHandler;
 import edu.brown.cs.student.main.REPL.StarHandler;
 import edu.brown.cs.student.main.REPL.SubtractHandler;
 import edu.brown.cs.student.main.REPL.UsersHandler;
@@ -89,14 +90,13 @@ public final class Main {
 
     try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
       String input;
-//      String[][] sheet = new String[1][1];
-//      BloomList bloomFilters = new BloomList();
-//      ORM orm = null;
+
       Map<String, Class<? extends REPLCommandHandler>> commands = Map.of(
           "add", AddHandler.class,
           "subtract", SubtractHandler.class,
           "stars", StarHandler.class,
-          "users", UsersHandler.class
+          "users", UsersHandler.class,
+          "recsys_load", RecommenderSystemHandler.class
       );
 
       Map<String,REPLCommandHandler> existingCommands = new HashMap<>();
@@ -129,38 +129,6 @@ public final class Main {
 
           REPLCommandHandler commandHandler = existingCommands.get(arguments[0]);
           commandHandler.parseCommand(arguments);
-
-//           if (arguments[0].equals("similar") && arguments.length == 3) { //TODO
-//            //create desired bloom filter from data in SQL database
-//            //compare to arraylist using AND or XNOR
-//            //save and return k most similar
-//            if (orm == null) {
-//              throw new IOException("ERROR: Database not loaded!");
-//            }
-//            int k = Integer.parseInt(arguments[1]);
-//            List<User> resultList = orm.where("user_id", arguments[2], User.class);
-//            if (!resultList.isEmpty()) {
-//              BloomFilter toCompare = resultList.get(0).makeBloomFilter();
-//              bloomFilters.findKSimilar(toCompare, k);
-//            } else {
-//              throw new IOException("ERROR: No such user_id");
-//            }
-//          } else if (arguments[0].equals("similar") && arguments.length == 8) {
-//            int k = Integer.parseInt(arguments[1]);
-//            /** creates bloom filter from given arguments with userID 1 (irrelevant) */
-//            BloomFilter toCompare = new BloomFilter(arguments[2], arguments[3], arguments[4],
-//                Integer.parseInt(arguments[5]), arguments[6], arguments[7], "1");
-//            bloomFilters.findKSimilar(toCompare, k);
-//
-//          } else if (input.equals("recsys_load responses")) {
-//            orm = new ORM("data/project-1/integration.sqlite3");
-//            List<Negative> negList = orm.sql("SELECT * FROM negative");
-//            List<Positive> posList = orm.sql("SELECT * FROM positive");
-//            List<Interests> interestList = orm.sql("SELECT * FROM interests");
-//            List<Skills> skillsList = orm.sql("SELECT * FROM skills");
-//          } else {
-//            throw new IOException();
-//          }
 
         } catch (Exception e) {
            e.printStackTrace();
