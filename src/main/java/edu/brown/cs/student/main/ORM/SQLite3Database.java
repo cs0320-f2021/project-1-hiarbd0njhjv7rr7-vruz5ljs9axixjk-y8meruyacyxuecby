@@ -1,6 +1,7 @@
 package edu.brown.cs.student.main.ORM;
 
 import edu.brown.cs.student.main.DataTypes.IDataType;
+import edu.brown.cs.student.main.PrintHelper;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -25,6 +26,7 @@ public class SQLite3Database implements IDatabase {
   protected Connection establishConnection(String dbName) {
     try {
       Class.forName("org.sqlite.JDBC");
+      System.out.println("Working Directory = " + System.getProperty("user.dir"));
       return DriverManager.getConnection("jdbc:sqlite:" + dbName);
     } catch (ClassNotFoundException | SQLException e) {
       e.printStackTrace();
@@ -32,6 +34,8 @@ public class SQLite3Database implements IDatabase {
 
     return null;
   }
+
+
 
   @Override
   public boolean connectToDatabase(String dbName) {
@@ -136,6 +140,23 @@ public class SQLite3Database implements IDatabase {
     return "SELECT * FROM " + tableName + " WHERE " + condition + ";";
   }
 
+  private String getTableNameFromQuery(String sqlQuery){
+    String[] queryWords = sqlQuery.split(" ");
+    String targetClass = null;
+    for (int i = 0; i < queryWords.length; i++) {
+      // check if FROM is not the last word
+      if (queryWords[i].equals("FROM") && (i + 1 < queryWords.length)) {
+        targetClass = queryWords[i + 1];
+      }
+    }
+
+    // Do we want this to happen?
+    if (targetClass == null) {
+      return null;
+    }
+
+    return targetClass;
+  }
 
   @Override
   public <T extends IDataType> List<T> runQuery(String query, Constructor<? extends T> constructor) {
@@ -144,7 +165,8 @@ public class SQLite3Database implements IDatabase {
     try {
       HashMap<String, String> columnNameToDataType = new HashMap<String, String>();
       HashMap<Integer, String> columnIndexToName = new HashMap<Integer, String>();
-      String tableName = constructor.getDeclaringClass().getSimpleName();
+      String tableName = getTableNameFromQuery(query);
+
       String getColumnTypesQuery = "PRAGMA table_info(" + tableName +");";
       prep = conn.prepareStatement(getColumnTypesQuery);
       ResultSet rs = prep.executeQuery();

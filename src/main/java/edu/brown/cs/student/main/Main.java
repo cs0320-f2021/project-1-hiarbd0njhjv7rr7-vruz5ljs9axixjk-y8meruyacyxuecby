@@ -29,6 +29,7 @@ import edu.brown.cs.student.main.REPL.BadCommandException;
 import edu.brown.cs.student.main.REPL.REPLCommandHandler;
 import edu.brown.cs.student.main.REPL.StarHandler;
 import edu.brown.cs.student.main.REPL.SubtractHandler;
+import edu.brown.cs.student.main.REPL.UsersHandler;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -94,11 +95,12 @@ public final class Main {
       Map<String, Class<? extends REPLCommandHandler>> commands = Map.of(
           "add", AddHandler.class,
           "subtract", SubtractHandler.class,
-          "stars", StarHandler.class
+          "stars", StarHandler.class,
+          "users", UsersHandler.class
       );
 
       Map<String,REPLCommandHandler> existingCommands = new HashMap<>();
-      
+
       while ((input = br.readLine()) != null) {
         try {
           input = input.trim();
@@ -128,19 +130,7 @@ public final class Main {
           REPLCommandHandler commandHandler = existingCommands.get(arguments[0]);
           commandHandler.parseCommand(arguments);
 
-//          if (arguments[0].equals("users") && arguments.length == 2) {
-//            bloomFilters = new BloomList();
-//            /** Create new bloom filter for every entry in arguments[1] specified file,
-//            then add to bloomFilters BloomList */
-//            if (arguments[1].endsWith(".sqlite3")) { //only works with sqlite databases
-//              orm = new ORM(arguments[1]);
-//              List<User> userList = orm.sql("SELECT * FROM user");
-//              for (User user : userList) {
-//                bloomFilters.insert(user.makeBloomFilter());
-//              }
-//            }
-//
-//          } else if (arguments[0].equals("similar") && arguments.length == 3) { //TODO
+//           if (arguments[0].equals("similar") && arguments.length == 3) { //TODO
 //            //create desired bloom filter from data in SQL database
 //            //compare to arraylist using AND or XNOR
 //            //save and return k most similar

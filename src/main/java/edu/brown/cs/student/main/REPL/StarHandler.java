@@ -187,7 +187,11 @@ public class StarHandler implements REPLCommandHandler {
         e.printStackTrace();
       }
     } else {
-
+      try {
+        this.processNearestNeighboursByName(args);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
     return null;
   }

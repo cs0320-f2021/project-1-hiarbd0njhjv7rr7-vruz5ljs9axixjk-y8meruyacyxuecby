@@ -131,12 +131,37 @@ public class ORM {
    * @throws ClassNotFoundException - when class not found
    */
   private <T extends IDataType> Constructor<? extends T> getConstructor(String className) throws ClassNotFoundException {
-    Class<?> tClass = Class.forName(className);
+    String pkgName = "edu.brown.cs.student.main.DataTypes.";
+    Class<?> tClass = Class.forName(pkgName+className);
     for (Constructor<?> cxtor : tClass.getConstructors()) {
       return (Constructor<? extends T>) cxtor;
     }
     return null;
   }
+
+  private String getClassNameFromQuery(String sqlQuery){
+    String[] queryWords = sqlQuery.split(" ");
+    String targetClass = null;
+    for (int i = 0; i < queryWords.length; i++) {
+      // check if FROM is not the last word
+      if (queryWords[i].equals("FROM") && (i + 1 < queryWords.length)) {
+        targetClass = queryWords[i + 1];
+      }
+    }
+
+    // Do we want this to happen?
+    if (targetClass == null) {
+      return null;
+    }
+
+    targetClass = targetClass.substring(0, 1).toUpperCase() + targetClass.substring(1);
+    if (targetClass.endsWith("s")){
+      targetClass = targetClass.substring(0, targetClass.length() - 1);
+    }
+    return targetClass;
+  }
+
+
   /**
    * Runs a given sqlQuery or update to the SQL database
    * @param sqlQuery - query to run
@@ -147,25 +172,14 @@ public class ORM {
   public <T extends  IDataType> List<T> sql(String sqlQuery) throws ClassNotFoundException {
     if (sqlQuery.toUpperCase().contains("SELECT")) {
       Constructor<? extends T> constructor = null;
-      String[] queryWords = sqlQuery.split(" ");
-      String targetClass = null;
 
-      for (int i = 0; i < queryWords.length; i++) {
-        // check if FROM is not the last word
-        if (queryWords[i].equals("FROM") && (i + 1 < queryWords.length)) {
-          targetClass = queryWords[i + 1];
-        }
-      }
-      // Do we want this to happen?
-      if (targetClass == null) {
-        return null;
-      }
-
+      String targetClass = getClassNameFromQuery(sqlQuery);
       constructor = getConstructor(targetClass);
 
       if (constructor == null) {
         return null;
       }
+
       return this.database.runQuery(sqlQuery, constructor);
     } else {
       this.database.runUpdate(sqlQuery);

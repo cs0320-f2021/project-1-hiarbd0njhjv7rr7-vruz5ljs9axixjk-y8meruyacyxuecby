@@ -22,7 +22,7 @@ public class DeconstructedObjectTest {
   }
 
   private User initUser() {
-    return new User(200, 154, "small", 170, 20,
+    return new User("200", "154lbs", "small", "5' 9\"", "20",
         "stocky", "libra");
   }
 
@@ -42,9 +42,9 @@ public class DeconstructedObjectTest {
     assertEquals("User", user.getClassName());
     assertArrayEquals(new String[]{"user_id", "weight", "bust_size", "height", "age", "body_type", "horoscope"},
         user.getColumns());
-    assertArrayEquals(new String[]{"200", "154", "'small'", "170", "20", "'stocky'", "'libra'"},
+    assertArrayEquals(new String[]{"200", "'154lbs'", "'small'", "69", "20", "'stocky'", "'libra'"},
         user.getValues());
-    assertArrayEquals(new String[]{"INTEGER", "INTEGER", "TEXT", "INTEGER", "INTEGER", "TEXT", "TEXT"},
+    assertArrayEquals(new String[]{"INTEGER", "TEXT", "TEXT", "INTEGER", "INTEGER", "TEXT", "TEXT"},
         user.getDatatypes());
   }
 
