@@ -6,11 +6,18 @@ import edu.brown.cs.student.main.DataTypes.Interest;
 import edu.brown.cs.student.main.DataTypes.Negative;
 import edu.brown.cs.student.main.DataTypes.Positive;
 import edu.brown.cs.student.main.DataTypes.Skill;
+import edu.brown.cs.student.main.DataTypes.StudentCategorical;
+import edu.brown.cs.student.main.DataTypes.StudentNumerical;
+import edu.brown.cs.student.main.KDtree.coordinates.Coordinate;
+import edu.brown.cs.student.main.KDtree.coordinates.KdTree;
 import edu.brown.cs.student.main.ORM.ORM;
 import edu.brown.cs.student.main.PrintHelper;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RecommenderSystemHandler implements REPLCommandHandler{
 
@@ -18,9 +25,11 @@ public class RecommenderSystemHandler implements REPLCommandHandler{
   private List<Negative> negList;
   private List<Positive> posList;
   private List<Interest> interestList;
-  private List<Skill> skillsList;
   private ApiAggregator api;
   private List<Object> identities;
+  private BloomList studentBloomList;
+  private KdTree<String> studentTree;
+  private Map<String, Coordinate<String>> idCoordinateMap = new HashMap<>();
 
 
   @Override
@@ -42,12 +51,27 @@ public class RecommenderSystemHandler implements REPLCommandHandler{
       this.negList = orm.sql("SELECT * FROM negative");
       this.posList = orm.sql("SELECT * FROM positive");
       this.interestList = orm.sql("SELECT * FROM interests");
-      this.skillsList = orm.sql("SELECT * FROM skills");
+      List<Skill> skillsList = orm.sql("SELECT * FROM skills");
       this.identities = api.getData("Identity");
-      PrintHelper.printlnCyan("Loaded data for users!");
-    } catch(Exception e){
+
+      studentBloomList = new BloomList();
+
+      List<Coordinate<String>> coordList = new ArrayList<>();
+      for (Skill skill : skillsList) {
+        Coordinate<String> coord = new StudentNumerical(skill);
+        coordList.add(coord);
+        idCoordinateMap.put(coord.getId(), coord);
+      }
+      studentTree = new KdTree<>(6, coordList);
+      PrintHelper.printlnCyan("Loaded Recommender with " + identities.size() + " students.");
+    } catch (Exception e){
       e.printStackTrace();
     }
+  }
+
+  private List<StudentCategorical> categoricalParser() {
+    Map<Integer, StudentCategorical> categoricalMap = new HashMap<>();
+    return null;
   }
 
   private void processRecommendations(String[] args){

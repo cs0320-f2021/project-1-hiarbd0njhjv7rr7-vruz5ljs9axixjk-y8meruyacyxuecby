@@ -1,6 +1,6 @@
-package edu.brown.cs.student.stars;
+package edu.brown.cs.student.main.KDtree.stars;
 
-import edu.brown.cs.student.coordinates.Coordinate;
+import edu.brown.cs.student.main.KDtree.coordinates.Coordinate;
 
 import java.util.ArrayList;
 import java.util.List;

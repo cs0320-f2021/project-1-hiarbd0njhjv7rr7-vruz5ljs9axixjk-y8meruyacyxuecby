@@ -1,10 +1,10 @@
-package edu.brown.cs.student.searchAlgorithms;
+package edu.brown.cs.student.main.KDtree.searchAlgorithms;
 
-import edu.brown.cs.student.coordinates.Coordinate;
-import edu.brown.cs.student.coordinates.KdTree;
-import edu.brown.cs.student.coordinates.KeyDistance;
-import edu.brown.cs.student.node.Node;
-import edu.brown.cs.student.stars.Star;
+import edu.brown.cs.student.main.KDtree.coordinates.Coordinate;
+import edu.brown.cs.student.main.KDtree.coordinates.KdTree;
+import edu.brown.cs.student.main.KDtree.coordinates.KeyDistance;
+import edu.brown.cs.student.main.KDtree.node.Node;
+import edu.brown.cs.student.main.KDtree.stars.Star;
 import org.junit.Before;
 import org.junit.Test;
 
