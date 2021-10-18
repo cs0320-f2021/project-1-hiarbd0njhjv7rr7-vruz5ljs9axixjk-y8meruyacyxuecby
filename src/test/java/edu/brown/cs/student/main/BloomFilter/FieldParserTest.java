@@ -1,5 +1,4 @@
 package edu.brown.cs.student.main.BloomFilter;
-import edu.brown.cs.student.main.BloomFilter.FieldParser;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
@@ -8,7 +7,7 @@ public class FieldParserTest {
 
   @Test
   public void testWeight(){
-    FieldParser fp = new FieldParser();
+    UserFieldParser fp = new UserFieldParser();
     assertEquals(fp.parseWeight("105lbs"), 1);
     assertEquals(fp.parseWeight("110lbs"), 1);
     assertEquals(fp.parseWeight("177lbs"), 8);
@@ -17,7 +16,7 @@ public class FieldParserTest {
 
   @Test
   public void testBust(){
-    FieldParser fp = new FieldParser();
+    UserFieldParser fp = new UserFieldParser();
     assertEquals(fp.parseBust("34D"), 2);
     assertEquals(fp.parseBust("34DD"), 2);
     assertEquals(fp.parseBust("32ddd/e"), 1);
@@ -25,7 +24,7 @@ public class FieldParserTest {
 
   @Test
   public void testHeight(){
-    FieldParser fp = new FieldParser();
+    UserFieldParser fp = new UserFieldParser();
     assertEquals(fp.parseHeight("5' 8\""), 5);
     assertEquals(fp.parseHeight("5' 11\""), 2);
     assertEquals(fp.parseHeight("6' 0\""), 2);
@@ -40,7 +39,7 @@ public class FieldParserTest {
 
   @Test
   public void testAge(){
-    FieldParser fp = new FieldParser();
+    UserFieldParser fp = new UserFieldParser();
     assertEquals(fp.parseAge(15), 1);
     assertEquals(fp.parseAge(69), 11);
     assertEquals(fp.parseAge(42), 6);
@@ -50,7 +49,7 @@ public class FieldParserTest {
 
   @Test
   public void testBody(){
-    FieldParser fp = new FieldParser();
+    UserFieldParser fp = new UserFieldParser();
     assertEquals(fp.parseBody("apple"), 7);
     assertEquals(fp.parseBody("hourglass"), 3);
     assertEquals(fp.parseBody("straight & narrow"), 5);
@@ -58,7 +57,7 @@ public class FieldParserTest {
 
   @Test
   public void testHoroscope(){
-    FieldParser fp = new FieldParser();
+    UserFieldParser fp = new UserFieldParser();
     assertEquals(fp.parseHoroscope("Leo"), 5);
   }
 }

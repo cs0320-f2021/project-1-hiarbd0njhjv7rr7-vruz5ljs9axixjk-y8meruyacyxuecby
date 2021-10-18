@@ -8,7 +8,7 @@ import java.util.Comparator;
 public class BloomList {
   ArrayList<BloomFilter> _filters;
   int[][] _similarities;
-  final int NUMBITS = 693;
+  final int NUMBITS = 500;
 
   /**
    * Constructor for BloomList.
@@ -65,21 +65,17 @@ public class BloomList {
    * the most similar!
    * @param target
    */
-  private void calculateSimilarity(BloomFilter target){ /** FIX THIS: it only finds the similarity of the first element added SEE TESTS */
+  private void calculateSimilarity(BloomFilter target){
     this.reloadSimilarities();
     int c = 0;
     for (BloomFilter b: _filters){
-      BitSet[] bits = b.getBitSets();
-      BitSet[] targetBits = target.getBitSets();
-
-      int cardinalitySum = 0;
-      cardinalitySum += this.compareAnd(targetBits[0], bits[0]);
-      cardinalitySum += this.compareAnd(targetBits[1], bits[1]);
-      cardinalitySum += this.compareAnd(targetBits[2], bits[2]);
-
-      _similarities[c][0] = Integer.parseInt(b.getUserID()); //adds userID to column 1
+      BitSet bits = b.getBitSet();
+      BitSet targetBits = target.getBitSet();
+      int cardinalitySum = this.compareAnd(targetBits, bits);
+      _similarities[c][0] = Integer.parseInt(b.getIdentifier()); //adds identifier to column 1
       _similarities[c][1] = cardinalitySum; //adds cardinality sum to column 2
       c++;
+      //System.out.println(Integer.parseInt(b.Identifier()) + " has sim " + cardinalitySum);
     }
   }
 

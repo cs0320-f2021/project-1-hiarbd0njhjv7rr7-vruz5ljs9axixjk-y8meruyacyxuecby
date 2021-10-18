@@ -1,11 +1,11 @@
 package edu.brown.cs.student.main.BloomFilter;
 
-public class FieldParser {
+public class UserFieldParser {
 
   /**
    * Empty Constructor for FieldParser
    */
-  FieldParser(){
+  UserFieldParser(){
 
   }
 
