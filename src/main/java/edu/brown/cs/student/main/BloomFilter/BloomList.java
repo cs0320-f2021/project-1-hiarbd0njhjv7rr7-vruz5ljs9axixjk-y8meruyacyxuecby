@@ -7,7 +7,7 @@ import java.util.Comparator;
 
 public class BloomList {
   ArrayList<BloomFilter> _filters;
-  int[][] _similarities;
+  String[][] _similarities;
   final int NUMBITS = 500;
 
   /**
@@ -34,10 +34,10 @@ public class BloomList {
    */
   public void findKSimilar(BloomFilter target, int k){
     this.calculateSimilarity(target);
-    Arrays.sort(_similarities, new Comparator<int[]>() { /** sorts array by cardinality sum */
+    Arrays.sort(_similarities, new Comparator<String[]>() { /** sorts array by cardinality sum */
     @Override
-    public int compare(int[] one, int[] two) { /** defines new compare method */
-      if (one[1] < two[1]) {
+    public int compare(String[] one, String[] two) { /** defines new compare method */
+      if (Integer.parseInt(one[1]) < Integer.parseInt(two[1])) {
         return 1;
       } else {
         return -1;
@@ -47,12 +47,12 @@ public class BloomList {
 
     if (k > _similarities.length){ /** if input k is larger than number of users, print the max */
       for (int i = 0; i < _similarities.length; i++){
-        System.out.println("Similar #" + (i+1) + " UserID: " + _similarities[i][0]);
+        System.out.println("Similar #" + (i+1) + " Identifier: " + _similarities[i][0] + " has " + _similarities[i][1] + " properties in common.");
       }
     }
     else{
       for (int i = 0; i < k; i++){
-        System.out.println("Similar #" + (i+1) + " UserID: " + _similarities[i][0]);
+        System.out.println("Similar #" + (i+1) + " Identifier: " + _similarities[i][0]);
       }
     }
   }
@@ -72,10 +72,9 @@ public class BloomList {
       BitSet bits = b.getBitSet();
       BitSet targetBits = target.getBitSet();
       int cardinalitySum = this.compareAnd(targetBits, bits);
-      _similarities[c][0] = Integer.parseInt(b.getIdentifier()); //adds identifier to column 1
-      _similarities[c][1] = cardinalitySum; //adds cardinality sum to column 2
+      _similarities[c][0] = b.getIdentifier(); //adds identifier to column 1
+      _similarities[c][1] = Integer.toString(cardinalitySum); //adds cardinality sum to column 2
       c++;
-      //System.out.println(Integer.parseInt(b.Identifier()) + " has sim " + cardinalitySum);
     }
   }
 
@@ -83,7 +82,7 @@ public class BloomList {
    * Loads 2D array of userID and similarity measures with number of bloom filters in the list
    */
   private void reloadSimilarities(){
-    _similarities = new int[_filters.size()][2];
+    _similarities = new String[_filters.size()][2];
   }
 
   /**
