@@ -52,7 +52,7 @@ public class BloomList {
     }
     else{
       for (int i = 0; i < k; i++){
-        System.out.println("Similar #" + (i+1) + " Identifier: " + _similarities[i][0]);
+        System.out.println("Similar #" + (i+1) + " Identifier: " + _similarities[i][0] + " has " + _similarities[i][1] + " properties in common.");
       }
     }
   }

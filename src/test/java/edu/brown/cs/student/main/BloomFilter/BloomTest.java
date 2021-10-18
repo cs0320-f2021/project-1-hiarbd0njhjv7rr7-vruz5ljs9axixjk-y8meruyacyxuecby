@@ -35,7 +35,7 @@ public class BloomTest {
     BloomFilter student2 = new BloomFilter("Minerva McGongall", "Personally", "Grad", "Early morning (6:00AM - 9:00AM); Late Night (12:00AM - 3:00AM)", "", "", "");
     BloomFilter student3 = new BloomFilter("Joe Biden", "Virtually", "Grad", "Early morning (6:00AM - 9:00AM); Late morning (9:00AM - 12:00PM); Early Afternoon (12:00PM - 3:00PM)", "C++", "None", "No");
     BloomFilter student4 = new BloomFilter("Alexandra Ocasio Cortez", "Personally", "Freshman", "Early morning (6:00AM - 9:00AM); Late Afternoon (3:00PM - 6:00PM); Evening (6:00PM - 9:00PM); Night (9:00PM - 12:00AM)", "JavaScript", "BIPOC; Woman", "Yes");
-    //BloomFilter testStudent = new BloomFilter()
+    BloomFilter testStudent = new BloomFilter("Test", "Personally", "Freshman", "Early morning (6:00AM - 9:00AM)", "JavaScript", "BIPOC", "Yes");
     bl.insert(student1);
     bl.insert(student2);
     bl.insert(student3);
@@ -48,5 +48,7 @@ public class BloomTest {
     bl.findKSimilar(student3, 10);
     System.out.println();
     bl.findKSimilar(student4, 10);
+    System.out.println();
+    bl.findKSimilar(testStudent, 6);
   }
 }

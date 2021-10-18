@@ -101,17 +101,19 @@ public class BloomFilter {
    * Sets bitset to true at the location returned by hash1, hash2, and hash3 for students
    */
   private void hashAllStudents(){
-    int[] hash1 = _hasher.sHashOne();
-    int[] hash2 = _hasher.sHashTwo();
-    int[] hash3 = _hasher.sHashThree();
-    for (int i = 0; i < hash1.length; i++){
-      _filter.set(hash1[i]);
-    }
-    for (int i = 0; i < hash2.length; i++){
-      _filter.set(hash2[i]);
-    }
-    for (int i = 0; i < hash3.length; i++){
-      _filter.set(hash3[i]);
+    if (_type.equals("student")){
+      int[] hash1 = _hasher.sHashOne();
+      int[] hash2 = _hasher.sHashTwo();
+      int[] hash3 = _hasher.sHashThree();
+      for (int i = 0; i < hash1.length; i++){
+        _filter.set(hash1[i]);
+      }
+      for (int i = 0; i < hash2.length; i++){
+        _filter.set(hash2[i]);
+      }
+      for (int i = 0; i < hash3.length; i++){
+        _filter.set(hash3[i]);
+      }
     }
   }
 }
