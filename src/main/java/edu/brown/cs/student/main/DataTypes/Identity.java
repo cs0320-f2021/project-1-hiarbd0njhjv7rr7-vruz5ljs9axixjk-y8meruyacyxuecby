@@ -1,5 +1,7 @@
 package edu.brown.cs.student.main.DataTypes;
 
+import java.util.Map;
+
 public class Identity {
   private int id;
   private String name;
@@ -28,4 +30,56 @@ public class Identity {
     this.prefer_group = prefer_group;
   }
 
+  public int getId() {
+    return id;
+  }
+
+  /**
+   * Method to populate a map of categorical data.
+   * @param categoricalMap
+   */
+  public void populateCategoricalMap(Map<Integer, StudentCategorical> categoricalMap) {
+    if (!categoricalMap.containsKey(id)) {
+      categoricalMap.put(id, new StudentCategorical(String.valueOf(id)));
+    }
+    StudentCategorical student = categoricalMap.get(id);
+    student.setGrade(grade);
+    student.setLang(preferred_language);
+    student.setMarg(marginalized_groups);
+    student.setPrefer(prefer_group);
+    student.setMeettime(meeting_times);
+    student.setMeettype(meeting);
+  }
+
+  public String getMeeting() {
+    return meeting;
+  }
+
+  public String getGrade() {
+    return grade;
+  }
+
+  public String getYears_of_experience() {
+    return years_of_experience;
+  }
+
+  public String getHoroscope() {
+    return horoscope;
+  }
+
+  public String getMeeting_times() {
+    return meeting_times;
+  }
+
+  public String getPreferred_language() {
+    return preferred_language;
+  }
+
+  public String getMarginalized_groups() {
+    return marginalized_groups;
+  }
+
+  public String getPrefer_group() {
+    return prefer_group;
+  }
 }

@@ -1,7 +1,9 @@
 package edu.brown.cs.student.main.REPL;
 
 import edu.brown.cs.student.main.API.main.ApiAggregator;
+import edu.brown.cs.student.main.BloomFilter.BloomFilter;
 import edu.brown.cs.student.main.BloomFilter.BloomList;
+import edu.brown.cs.student.main.DataTypes.Identity;
 import edu.brown.cs.student.main.DataTypes.Interest;
 import edu.brown.cs.student.main.DataTypes.Negative;
 import edu.brown.cs.student.main.DataTypes.Positive;
@@ -10,76 +12,156 @@ import edu.brown.cs.student.main.DataTypes.StudentCategorical;
 import edu.brown.cs.student.main.DataTypes.StudentNumerical;
 import edu.brown.cs.student.main.KDtree.coordinates.Coordinate;
 import edu.brown.cs.student.main.KDtree.coordinates.KdTree;
+import edu.brown.cs.student.main.KDtree.node.Node;
+import edu.brown.cs.student.main.KDtree.searchAlgorithms.KdTreeSearch;
 import edu.brown.cs.student.main.ORM.ORM;
 import edu.brown.cs.student.main.PrintHelper;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RecommenderSystemHandler implements REPLCommandHandler{
+public class RecommenderSystemHandler implements REPLCommandHandler {
 
   private ORM orm;
-  private List<Negative> negList;
-  private List<Positive> posList;
-  private List<Interest> interestList;
   private ApiAggregator api;
-  private List<Object> identities;
   private BloomList studentBloomList;
-  private KdTree<String> studentTree;
   private Map<String, Coordinate<String>> idCoordinateMap = new HashMap<>();
+  private Map<String, BloomFilter> bloomFilterMap = new HashMap<>();
 
 
   @Override
   public boolean checkValidCommand(String[] args) {
-    if (args[0].equals("recsys_load") && args.length == 2){
+    if (args[0].equals("recsys_load") && args.length == 2) {
       return true;
-    } else if (args[0].equals("recsys_rec") && args.length == 3){
+    } else if (args[0].equals("recsys_rec") && args.length == 3) {
       return true;
-    } else if (args[0].equals("recsys_gen_groups") && args.length == 2){
+    } else if (args[0].equals("recsys_gen_groups") && args.length == 2) {
       return true;
     }
     return false;
   }
 
-  private void processLoad(String[] args){
+  private void processLoad(String[] args) {
     try {
       this.api = new ApiAggregator();
       this.orm = new ORM("data/project-1/integration.sqlite3");
-      this.negList = orm.sql("SELECT * FROM negative");
-      this.posList = orm.sql("SELECT * FROM positive");
-      this.interestList = orm.sql("SELECT * FROM interests");
+      List<Negative> negList = orm.sql("SELECT * FROM negative");
+      List<Positive> posList = orm.sql("SELECT * FROM positive");
+      List<Interest> interestList = orm.sql("SELECT * FROM interests");
       List<Skill> skillsList = orm.sql("SELECT * FROM skills");
-      this.identities = api.getData("Identity");
+      List<Object> identities = api.getData("Identity");
 
       studentBloomList = new BloomList();
+      Collection<StudentCategorical> categoricalData =
+          categoricalParser(negList, posList, interestList, identities);
 
-      List<Coordinate<String>> coordList = new ArrayList<>();
+      for (StudentCategorical sc : categoricalData) {
+        BloomFilter scBF = sc.makeBloomFilter();
+        studentBloomList.insert(scBF);
+        bloomFilterMap.put(sc.getId(), scBF);
+      }
+
       for (Skill skill : skillsList) {
         Coordinate<String> coord = new StudentNumerical(skill);
-        coordList.add(coord);
         idCoordinateMap.put(coord.getId(), coord);
       }
-      studentTree = new KdTree<>(6, coordList);
       PrintHelper.printlnCyan("Loaded Recommender with " + identities.size() + " students.");
-    } catch (Exception e){
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-  private List<StudentCategorical> categoricalParser() {
+  private Collection<StudentCategorical> categoricalParser(List<Negative> negList,
+                                                           List<Positive> posList,
+                                                           List<Interest> interestList,
+                                                           List<Object> identityList)
+      throws Exception {
     Map<Integer, StudentCategorical> categoricalMap = new HashMap<>();
-    return null;
+    for (Negative negative : negList) {
+      int id = negative.getId();
+      if (!categoricalMap.containsKey(id)) {
+        categoricalMap.put(id, new StudentCategorical(String.valueOf(id)));
+      }
+      categoricalMap.get(id).addNeg(negative.getTrait());
+    }
+    for (Positive positive : posList) {
+      int id = positive.getId();
+      if (!categoricalMap.containsKey(id)) {
+        categoricalMap.put(id, new StudentCategorical(String.valueOf(id)));
+      }
+      categoricalMap.get(id).addPos(positive.getTrait());
+    }
+    for (Interest interest : interestList) {
+      int id = interest.getId();
+      if (!categoricalMap.containsKey(id)) {
+        categoricalMap.put(id, new StudentCategorical(String.valueOf(id)));
+      }
+      categoricalMap.get(id).addInterest(interest.getInterest());
+    }
+    for (Object identity : identityList) {
+      Identity identityObj = Identity.class.cast(identity);
+      identityObj.populateCategoricalMap(categoricalMap);
+    }
+    return categoricalMap.values();
   }
 
-  private void processRecommendations(String[] args){
-    // TODO: IMPLEMENT
-    PrintHelper.printlnBlue("recsys_rec");
+  private void processRecommendations(String[] args) {
+    int numRecs = Integer.parseInt(args[1]);
+    String id = args[2];
+    BloomFilter targetBF = bloomFilterMap.get(id);
+    Coordinate<String> origCoord = idCoordinateMap.get(id);
+    Coordinate<String> targetCoord = null;
+    // Invert data so we find students that fill in the target student's weaknesses
+    if (origCoord instanceof StudentNumerical) {
+      targetCoord = ((StudentNumerical) origCoord).invertData();
+    }
+    List<Coordinate<String>> coordinates = new ArrayList<>(idCoordinateMap.values());
+    idCoordinateMap.put(id, targetCoord);
+    KdTree<String> studentTree = new KdTree<>(6, coordinates);
+    Node<Coordinate<String>> rootNode = studentTree.getRoot();
+
+
+    List<Coordinate<String>> kdTreeRecs = new KdTreeSearch<String>()
+        .getNearestNeighborsResult(numRecs, targetCoord, rootNode, true);
+    List<String> bfRecs = studentBloomList.findKSimilar(targetBF, numRecs);
+
+    List<String> recommendations = new ArrayList<>();
+    for (Coordinate<String> coord : kdTreeRecs) {
+      if (bfRecs.contains(coord.getId())) {
+        recommendations.add(coord.getId());
+      }
+    }
+    int size = recommendations.size();
+    while (size < numRecs) {
+      if (!kdTreeRecs.isEmpty()) {
+        String newId = kdTreeRecs.remove(0).getId();
+        if (!recommendations.contains(newId)) {
+          recommendations.add(newId);
+          size += 1;
+        }
+      }
+      if (!bfRecs.isEmpty()) {
+        String newId = bfRecs.remove(0);
+        if (!recommendations.contains(newId)) {
+          recommendations.add(newId);
+          size += 1;
+        }
+      }
+    }
+    if (recommendations.size() > numRecs) {
+      recommendations = recommendations.subList(0, numRecs);
+    }
+    for (String rec : recommendations) {
+      System.out.println(rec);
+    }
+    // Replace targetCoord with origCoord for other uses of creating matches.
+    idCoordinateMap.put(id, origCoord);
   }
 
-  private void processGenerateGroups(String[] args){
+  private void processGenerateGroups(String[] args) {
     // TODO: IMPLEMENT
     int k = Integer.parseInt(args[1]);
     String targetID = args[2];
@@ -93,14 +175,13 @@ public class RecommenderSystemHandler implements REPLCommandHandler{
 
   @Override
   public Object parseCommand(String[] args) {
-    if (!this.checkValidCommand(args)){
+    if (!this.checkValidCommand(args)) {
       throw new BadCommandException(args);
     }
-    if (args[0].equals("recsys_load")){
+    if (args[0].equals("recsys_load")) {
       this.processLoad(args);
-    }
-    else if (args[0].equals("recsys_rec")){
-      try{
+    } else if (args[0].equals("recsys_rec")) {
+      try {
         this.processRecommendations(args);
       } catch (Exception e) {
         e.printStackTrace();
@@ -117,8 +198,9 @@ public class RecommenderSystemHandler implements REPLCommandHandler{
 
   @Override
   public String[] relevantCommands() {
-    return new String[]{"recsys_load","recsys_rec","recsys_gen_groups"};
+    return new String[] {"recsys_load", "recsys_rec", "recsys_gen_groups"};
   }
 
-  public RecommenderSystemHandler(){}
+  public RecommenderSystemHandler() {
+  }
 }

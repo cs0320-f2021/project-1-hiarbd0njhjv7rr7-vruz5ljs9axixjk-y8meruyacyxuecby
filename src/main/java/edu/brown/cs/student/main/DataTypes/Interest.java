@@ -8,4 +8,12 @@ public class Interest implements IDataType {
     this.id = id;
     this.interest = interest;
   }
+
+  public int getId() {
+    return id;
+  }
+
+  public int getInterest() {
+    return interest;
+  }
 }

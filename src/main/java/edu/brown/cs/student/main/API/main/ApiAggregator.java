@@ -4,6 +4,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import edu.brown.cs.student.main.API.client.ApiClient;
 import edu.brown.cs.student.main.API.client.ClientRequestGenerator;
+import edu.brown.cs.student.main.DataTypes.Identity;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -17,7 +18,7 @@ public class ApiAggregator {
    * @return - List of the appropriate objects
    * @throws Exception
    */
-  public List<Object> getData(String dataType) throws Exception {
+  public <T> List<T> getData(String dataType) throws Exception {
     Gson gson = new Gson();
     Type type = setType(dataType);
     String filename = "https://runwayapi.herokuapp.com/integration";
@@ -72,7 +73,7 @@ public class ApiAggregator {
 
 
     // dummy return
-    return new TypeToken<List<Object>>(){}.getType();
+    return new TypeToken<List<Identity>>(){}.getType();
   }
 
 }

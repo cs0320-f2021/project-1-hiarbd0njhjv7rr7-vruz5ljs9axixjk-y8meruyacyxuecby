@@ -12,16 +12,16 @@ public class StudentCategorical {
   private String lang;
   private String marg;
   private String prefer;
-  private String pos;
-  private String neg;
-  private String interest;
+  private String pos = "";
+  private String neg = "";
+  private int interest = 0;
 
   public StudentCategorical(String id) {
     this.id = id;
   }
   public StudentCategorical(String id, String meettype, String grade, String meettime,
                             String lang, String marg, String prefer, String pos, String neg,
-                            String interest) {
+                            Integer interest) {
     this.id = id;
     this.meettype = meettype;
     this.grade = grade;
@@ -42,12 +42,16 @@ public class StudentCategorical {
     try {
       return new BloomFilter(id, meettype, grade, meettime,
           lang, marg, prefer, pos, neg,
-          interest);
+          String.valueOf(interest));
     } catch (IOException e) {
 //      e.printStackTrace();
       System.out.println("Unable to make Student BloomFilter");
     }
     return null;
+  }
+
+  public String getId() {
+    return this.id;
   }
 
   public void setMeettype(String meettype) {
@@ -74,15 +78,27 @@ public class StudentCategorical {
     this.prefer = prefer;
   }
 
-  public void setPos(String pos) {
-    this.pos = pos;
+  /**
+   * Adds the positive to the string of current positives.
+   * @param pos
+   */
+  public void addPos(String pos) {
+    this.pos += pos;
   }
 
-  public void setNeg(String neg) {
-    this.neg = neg;
+  /**
+   * Adds the negative to the string of current negatives.
+   * @param neg
+   */
+  public void addNeg(String neg) {
+    this.neg += neg;
   }
 
-  public void setInterest(String interest) {
-    this.interest = interest;
+  /**
+   * Adds the interest to the string of current interests.
+   * @param interest
+   */
+  public void addInterest(int interest) {
+    this.interest *= interest;
   }
 }

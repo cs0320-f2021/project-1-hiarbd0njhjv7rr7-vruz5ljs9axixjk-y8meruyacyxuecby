@@ -8,4 +8,12 @@ public class Positive implements IDataType {
     this.id = id;
     this.trait = trait;
   }
+
+  public int getId() {
+    return id;
+  }
+
+  public String getTrait() {
+    return trait;
+  }
 }

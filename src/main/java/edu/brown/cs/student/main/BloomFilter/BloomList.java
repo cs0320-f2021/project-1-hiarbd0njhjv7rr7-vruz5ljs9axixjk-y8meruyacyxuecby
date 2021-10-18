@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Comparator;
+import java.util.List;
 
 public class BloomList {
   private ArrayList<BloomFilter> _filters;
@@ -27,12 +28,12 @@ public class BloomList {
 
   /**
    * Calculates similarity cardinalities for each bloom filter in the list, then sorts
-   * _similarities by cardinality sum (second column), then prints out the k most similar
+   * _similarities by cardinality sum (second column), then returns the k most similar
    * users (via userID) to the target.
    * @param target
    * @param k
    */
-  public void findKSimilar(BloomFilter target, int k){
+  public List<String> findKSimilar(BloomFilter target, int k){
     this.calculateSimilarity(target);
     Arrays.sort(_similarities, new Comparator<String[]>() { /** sorts array by cardinality sum */
     @Override
@@ -44,17 +45,20 @@ public class BloomList {
       }
     }
     });
-
+    List<String> bloomRecs = new ArrayList<>();
     if (k > _similarities.length) { /** if input k is larger than number of users, print the max */
       for (int i = 0; i < _similarities.length; i++) {
-        System.out.println("Similar #" + (i + 1) + " Identifier: " + _similarities[i][0]);
+//        System.out.println("Similar #" + (i + 1) + " Identifier: " + _similarities[i][0]);
+        bloomRecs.add(_similarities[i][0]);
       }
     }
     else{
       for (int i = 0; i < k; i++){
-        System.out.println("Similar #" + (i+1) + " Identifier: " + _similarities[i][0]);
+//        System.out.println("Similar #" + (i+1) + " Identifier: " + _similarities[i][0]);
+        bloomRecs.add(_similarities[i][0]);
       }
     }
+    return bloomRecs;
   }
 
   /**
@@ -68,7 +72,7 @@ public class BloomList {
   private void calculateSimilarity(BloomFilter target){
     this.reloadSimilarities();
     int c = 0;
-    for (BloomFilter b: _filters){
+    for (BloomFilter b: _filters) {
       if (!b.getIdentifier().equals(target.getIdentifier())){
         BitSet bits = b.getBitSet();
         BitSet targetBits = target.getBitSet();

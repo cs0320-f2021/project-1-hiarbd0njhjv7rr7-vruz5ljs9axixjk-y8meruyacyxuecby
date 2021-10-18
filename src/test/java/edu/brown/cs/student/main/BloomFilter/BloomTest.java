@@ -22,10 +22,10 @@ public class BloomTest {
     bl.insert(user4);
     assertEquals(bl.size(), 4);
     /** prints k similar users to users 1, 2, and 3 in the bloom filter */
-    bl.findKSimilar(user1, 4); // THIS WORKS!
-    bl.findKSimilar(user3, 4); // THIS WORKS!
-    bl.findKSimilar(user2, 5); // THIS WORKS!
-    bl.findKSimilar(user4, 4);
+    System.out.println(bl.findKSimilar(user1, 4)); // THIS WORKS!
+    System.out.println(bl.findKSimilar(user3, 4)); // THIS WORKS!
+    System.out.println(bl.findKSimilar(user2, 5)); // THIS WORKS!
+    System.out.println(bl.findKSimilar(user4, 4));
   }
 
   @Test
@@ -47,8 +47,8 @@ public class BloomTest {
     System.out.println();
     bl.findKSimilar(student3, 10);
     System.out.println(); */
-    bl.findKSimilar(student4, 3);
+    System.out.println(bl.findKSimilar(student4, 3));
     System.out.println();
-    bl.findKSimilar(testStudent, 3);
+    System.out.println(bl.findKSimilar(testStudent, 3));
   }
 }

@@ -11,7 +11,7 @@ public class StudentHasher<HashTable> extends Hasher {
   /**
    * Constructor to initialize the variables.
    */
-  StudentHasher(String mty, String g, String mti, String l, String m, String p,
+  public StudentHasher(String mty, String g, String mti, String l, String m, String p,
                 String pos, String neg, String i) {
     _mty = mty;
     _g = g;
