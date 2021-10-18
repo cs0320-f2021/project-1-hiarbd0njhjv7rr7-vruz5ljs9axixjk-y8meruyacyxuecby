@@ -46,9 +46,9 @@ public class BloomTest {
     bl.findKSimilar(student2, 10);
     System.out.println();
     bl.findKSimilar(student3, 10);
-    System.out.println();
-    bl.findKSimilar(student4, 10);
     System.out.println(); */
-    bl.findKSimilar(testStudent, 6);
+    bl.findKSimilar(student4, 3);
+    System.out.println();
+    bl.findKSimilar(testStudent, 3);
   }
 }

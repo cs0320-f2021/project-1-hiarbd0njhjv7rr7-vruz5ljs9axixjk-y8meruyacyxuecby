@@ -69,13 +69,19 @@ public class BloomList {
     this.reloadSimilarities();
     int c = 0;
     for (BloomFilter b: _filters){
-      BitSet bits = b.getBitSet();
-      BitSet targetBits = target.getBitSet();
-      BitSet antiBits = b.getAntiSet();
-      BitSet targetAnti = target.getAntiSet();
-      int cardinalitySum = this.compareAnd(targetBits, bits) + this.compareAndAnti(targetAnti, antiBits);
-      _similarities[c][0] = b.getIdentifier(); //adds identifier to column 1
-      _similarities[c][1] = Integer.toString(cardinalitySum); //adds cardinality sum to column 2
+      if (!b.getIdentifier().equals(target.getIdentifier())){
+        BitSet bits = b.getBitSet();
+        BitSet targetBits = target.getBitSet();
+        BitSet antiBits = b.getAntiSet();
+        BitSet targetAnti = target.getAntiSet();
+        int cardinalitySum = this.compareAnd(targetBits, bits) + this.compareAndAnti(targetAnti, antiBits);
+        _similarities[c][0] = b.getIdentifier(); //adds identifier to column 1
+        _similarities[c][1] = Integer.toString(cardinalitySum); //adds cardinality sum to column 2
+      }
+      else{ /** if this is the target filter, set don't reccomend it high! */
+        _similarities[c][0] = b.getIdentifier();
+        _similarities[c][1] = Integer.toString(0);
+      }
       c++;
     }
   }

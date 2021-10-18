@@ -1,6 +1,7 @@
 package edu.brown.cs.student.main.REPL;
 
 import edu.brown.cs.student.main.API.main.ApiAggregator;
+import edu.brown.cs.student.main.BloomFilter.BloomList;
 import edu.brown.cs.student.main.DataTypes.Interest;
 import edu.brown.cs.student.main.DataTypes.Negative;
 import edu.brown.cs.student.main.DataTypes.Positive;
@@ -56,6 +57,13 @@ public class RecommenderSystemHandler implements REPLCommandHandler{
 
   private void processGenerateGroups(String[] args){
     // TODO: IMPLEMENT
+    int k = Integer.parseInt(args[1]);
+    String targetID = args[2];
+    //initialize bloomlist
+    BloomList bl = new BloomList();
+    //from API and database, create all bloom filters and add to bloomlist
+    //create new bloomfilter from the targetID's data
+    //call findKNearest on bloomlist on this floomfilter to print out the necessary groups
     PrintHelper.printlnBlue("recsys_gen_groups");
   }
 
