@@ -4,24 +4,35 @@ import edu.brown.cs.student.main.BloomFilter.BloomFilter;
 
 import java.io.IOException;
 
-public class Users implements IDataType {
+public class User implements IDataType {
   Integer user_id;
-  Integer weight;
+  String weight;
   String bust_size;
   Integer height;
   Integer age;
   String body_type;
   String horoscope;
 
-  public Users(Integer user_id, Integer weight, String bust_size, Integer height,
-              Integer age, String body_type, String horoscope) {
-    this.user_id = user_id;
+  public User(String user_id, String weight, String bust_size, String height,
+              String age, String body_type, String horoscope) {
+    this.user_id = Integer.parseInt(user_id);
     this.weight = weight;
     this.bust_size = bust_size;
-    this.height = height;
-    this.age = age;
+    this.height = getHeight(height);
+    this.age = Integer.parseInt(age);
     this.body_type = body_type;
     this.horoscope = horoscope;
+  }
+
+  private Integer getHeight(String height){
+
+    int totalHeight;
+    String[] splitHeight = height.split("'");
+    int feet = Integer.parseInt(splitHeight[0]);
+    int inches = Integer.parseInt(splitHeight[1].replaceAll("[^\\d.]",""));
+
+    totalHeight = feet * 12 + inches;
+    return totalHeight;
   }
 
   /**

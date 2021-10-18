@@ -1,7 +1,7 @@
 package edu.brown.cs.student.main.ORM;
 
 import edu.brown.cs.student.main.DataTypes.Rent;
-import edu.brown.cs.student.main.DataTypes.Users;
+import edu.brown.cs.student.main.DataTypes.User;
 import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -21,8 +21,8 @@ public class DeconstructedObjectTest {
         0);
   }
 
-  private Users initUser() {
-    return new Users(200, 154, "small", 170, 20,
+  private User initUser() {
+    return new User("200", "154lbs", "small", "5' 9\"", "20",
         "stocky", "libra");
   }
 
@@ -38,13 +38,13 @@ public class DeconstructedObjectTest {
     assertArrayEquals(new String[]{"TEXT", "INTEGER", "INTEGER", "INTEGER", "TEXT", "TEXT", "TEXT", "INTEGER"},
         rent.getDatatypes());
 
-    DeconstructedObject<Users> user = new DeconstructedObject<>(initUser());
-    assertEquals("Users", user.getClassName());
+    DeconstructedObject<User> user = new DeconstructedObject<>(initUser());
+    assertEquals("User", user.getClassName());
     assertArrayEquals(new String[]{"user_id", "weight", "bust_size", "height", "age", "body_type", "horoscope"},
         user.getColumns());
-    assertArrayEquals(new String[]{"200", "154", "'small'", "170", "20", "'stocky'", "'libra'"},
+    assertArrayEquals(new String[]{"200", "'154lbs'", "'small'", "69", "20", "'stocky'", "'libra'"},
         user.getValues());
-    assertArrayEquals(new String[]{"INTEGER", "INTEGER", "TEXT", "INTEGER", "INTEGER", "TEXT", "TEXT"},
+    assertArrayEquals(new String[]{"INTEGER", "TEXT", "TEXT", "INTEGER", "INTEGER", "TEXT", "TEXT"},
         user.getDatatypes());
   }
 

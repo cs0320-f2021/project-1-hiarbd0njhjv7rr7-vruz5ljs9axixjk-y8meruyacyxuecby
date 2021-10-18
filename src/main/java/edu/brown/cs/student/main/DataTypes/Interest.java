@@ -1,10 +1,10 @@
 package edu.brown.cs.student.main.DataTypes;
 
-public class Interests implements IDataType {
+public class Interest implements IDataType {
   private int id;
-  private String interest;
+  private int interest;
 
-  public Interests(int id, String interest) {
+  public Interest(int id, int interest) {
     this.id = id;
     this.interest = interest;
   }
