@@ -12,7 +12,7 @@ public class StudentHasherTest {
   public void hashTest(){
     StudentHasher hasher = new StudentHasher("Personally", "Sophomore",
         "Late morning (9:00AM - 12:00PM); Late Afternoon (3:00PM - 6:00PM); Evening (6:00PM - 9:00PM)", "C++",
-        "non-citizen", "Yes");
+        "non-citizen", "Yes", "", "", "");
     int[] resultsOne = hasher.sHashOne();
     //System.out.println(resultsOne[0]);
     //System.out.println(resultsOne[1]);

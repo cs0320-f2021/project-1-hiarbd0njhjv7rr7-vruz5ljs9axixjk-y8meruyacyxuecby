@@ -27,4 +27,5 @@ public class Hasher {
   public int[] sHashThree(){
     return new int[2];
   }
+  public int[] antiHash() { return new int[2]; }
 }

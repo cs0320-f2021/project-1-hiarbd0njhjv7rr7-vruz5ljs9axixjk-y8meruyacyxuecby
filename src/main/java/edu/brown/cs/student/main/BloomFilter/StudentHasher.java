@@ -5,19 +5,23 @@ import java.util.Hashtable;
 import java.util.Random;
 
 public class StudentHasher<HashTable> extends Hasher {
-  String _mty, _g, _mti, _l, _m, _p;
+  String _mty, _g, _mti, _l, _m, _p, _pos, _neg, _i;
   HashMap<String, Integer> _alphabetPrimes;
 
   /**
    * Constructor to initialize the variables.
    */
-  StudentHasher(String mty, String g, String mti, String l, String m, String p) {
+  StudentHasher(String mty, String g, String mti, String l, String m, String p,
+                String pos, String neg, String i) {
     _mty = mty;
     _g = g;
     _mti = mti;
     _l = l;
     _m = m;
     _p = p;
+    _pos = pos;
+    _neg = neg;
+    _i = i;
     _alphabetPrimes = new HashMap<String, Integer>();
     this.populatePrimes();
   }
@@ -82,6 +86,26 @@ public class StudentHasher<HashTable> extends Hasher {
       Random generator1 = new Random(this.calculateThree(times[i]));
       ret[i] = generator1.nextInt(498);
     }
+    return ret;
+  }
+
+  /**
+   * Hashes all anti fields with the following method:
+   * Each letter is assigned a unique prime number. The hash of a string is then the
+   * sum of each letter's corresponding prime numbers plus the fourth power of the index
+   * in the string the letter is found.
+   * To generate a valid index in the bitset, a seeded random number generator is used.
+   * @return
+   */
+  @Override
+  public int[] antiHash(){
+    int[] ret = new int[3];
+    Random generator1 = new Random(this.calculateAnti(_pos));
+    ret[0] = generator1.nextInt(498);
+    Random generator2 = new Random(this.calculateAnti(_neg));
+    ret[1] = generator2.nextInt(498);
+    Random generator3 = new Random(this.calculateAnti(_i));
+    ret[2] = generator3.nextInt(498);
     return ret;
   }
 
@@ -160,6 +184,17 @@ public class StudentHasher<HashTable> extends Hasher {
       String op = toCalc.substring(i, i+1);
       op = op.toLowerCase();
       count += _alphabetPrimes.get(op);
+    }
+    return count;
+  }
+
+  /** performs mathematical calculation to hash the given string using anti's method */
+  private int calculateAnti(String toCalc){
+    int count = 0;
+    for (int i = 0; i < toCalc.length(); i++){
+      String op = toCalc.substring(i, i+1);
+      op = op.toLowerCase();
+      count += _alphabetPrimes.get(op) + Math.pow((i + 1), 4);
     }
     return count;
   }

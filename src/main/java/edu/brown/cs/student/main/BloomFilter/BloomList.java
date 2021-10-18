@@ -6,9 +6,9 @@ import java.util.BitSet;
 import java.util.Comparator;
 
 public class BloomList {
-  ArrayList<BloomFilter> _filters;
-  String[][] _similarities;
-  final int NUMBITS = 500;
+  private ArrayList<BloomFilter> _filters;
+  private String[][] _similarities;
+  private final int NUMBITS = 500;
 
   /**
    * Constructor for BloomList.
@@ -45,14 +45,14 @@ public class BloomList {
     }
     });
 
-    if (k > _similarities.length){ /** if input k is larger than number of users, print the max */
-      for (int i = 0; i < _similarities.length; i++){
-        System.out.println("Similar #" + (i+1) + " Identifier: " + _similarities[i][0] + " has " + _similarities[i][1] + " properties in common.");
+    if (k > _similarities.length) { /** if input k is larger than number of users, print the max */
+      for (int i = 0; i < _similarities.length; i++) {
+        System.out.println("Similar #" + (i + 1) + " Identifier: " + _similarities[i][0]);
       }
     }
     else{
       for (int i = 0; i < k; i++){
-        System.out.println("Similar #" + (i+1) + " Identifier: " + _similarities[i][0] + " has " + _similarities[i][1] + " properties in common.");
+        System.out.println("Similar #" + (i+1) + " Identifier: " + _similarities[i][0]);
       }
     }
   }
@@ -71,7 +71,9 @@ public class BloomList {
     for (BloomFilter b: _filters){
       BitSet bits = b.getBitSet();
       BitSet targetBits = target.getBitSet();
-      int cardinalitySum = this.compareAnd(targetBits, bits);
+      BitSet antiBits = b.getAntiSet();
+      BitSet targetAnti = target.getAntiSet();
+      int cardinalitySum = this.compareAnd(targetBits, bits) + this.compareAndAnti(targetAnti, antiBits);
       _similarities[c][0] = b.getIdentifier(); //adds identifier to column 1
       _similarities[c][1] = Integer.toString(cardinalitySum); //adds cardinality sum to column 2
       c++;
@@ -94,11 +96,30 @@ public class BloomList {
   private int compareAnd(BitSet first, BitSet second){
     int countAnd = 0;
     for (int i = 0; i < NUMBITS; i++){
-      if (first.get(i) == true && second.get(i) == true){
+      if (first.get(i) && second.get(i)){
         countAnd++;
       }
     }
     return countAnd;
+  }
+
+  /**
+   * For the anti elements, we count how many bits are DIFFERENT as a measure of similarity.
+   * "anti" explanation in BloomFilter class.
+   * Thus, for every similar bit in the anti filters, we subtract one from the total similarity
+   * cardinality score.
+   * @param first
+   * @param second
+   * @return
+   */
+  private int compareAndAnti(BitSet first, BitSet second){
+    int countAndNot = 0;
+    for (int i = 0; i < NUMBITS; i++){
+      if (first.get(i) && second.get(i)){
+        countAndNot -= 1;
+      }
+    }
+    return countAndNot;
   }
 
   /**

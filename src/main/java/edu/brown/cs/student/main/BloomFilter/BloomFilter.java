@@ -1,14 +1,16 @@
 package edu.brown.cs.student.main.BloomFilter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.BitSet;
 
 public class BloomFilter {
   private BitSet _filter;
+  private BitSet _antifilter;
   private Hasher _hasher;
   private UserFieldParser _fp;
   private String _identifier;
   private String _type;
-  final int NUMBITS = 500;
+  private final int NUMBITS = 500;
 
   /**
    * Creates all instance variables when users are input, parses all input fields, then hashes them
@@ -37,27 +39,31 @@ public class BloomFilter {
   }
 
   /**
-   * Alternate constructor to initialize information related to the student dataset.
-   * @param name
-   * @param meettype
-   * @param grade
-   * @param meettime
-   * @param lang
-   * @param marg
-   * @param prefer
+   * Alternate constructor to initialize information related to the integration dataset from
+   * an API call.
+   * Fields pos, neg, and interest are called "anti" fields. In a separate bitset, we will check
+   * for how DISSIMILAR they are from each other as a measure of similarity (we think the best
+   * groups have different interests and good/bad personality traits to balance each other out).
    */
-  public BloomFilter(String name, String meettype, String grade, String meettime,
-                    String lang, String marg, String prefer) throws IOException {
+  public BloomFilter(String ID, String meettype, String grade, String meettime,
+                    String lang, String marg, String prefer, String pos,
+                     String neg, String interest) throws IOException {
     _type = "student";
-    _identifier = name;
-    _hasher = new StudentHasher(meettype, grade, meettime, lang, marg, prefer);
+    _identifier = ID;
+    _hasher = new StudentHasher(meettype, grade, meettime, lang, marg, prefer, pos, neg, interest);
     _filter = new BitSet(NUMBITS);
+    _antifilter = new BitSet(NUMBITS);
     try {
       this.hashAllStudents();
     }
     catch (Exception e) {
       throw new IOException();
     }
+  }
+
+  public BloomFilter(String interest, String Negative, String Positive, String id){
+    _type = "studentDB";
+    _identifier = id;
   }
 
   /**
@@ -68,6 +74,20 @@ public class BloomFilter {
     BitSet newFilter = new BitSet(NUMBITS);
     for (int i = 0; i < NUMBITS; i++){
       if (_filter != null && _filter.get(i) == true){
+        newFilter.set(i);
+      }
+    }
+    return newFilter;
+  }
+
+  /**
+   * Returns the filter's anti field bitset such that it can't be modified
+   * @return
+   */
+  public BitSet getAntiSet() {
+    BitSet newFilter = new BitSet(NUMBITS);
+    for (int i = 0; i < NUMBITS; i++){
+      if (_antifilter != null && _antifilter.get(i) == true){
         newFilter.set(i);
       }
     }
@@ -113,6 +133,11 @@ public class BloomFilter {
       }
       for (int i = 0; i < hash3.length; i++){
         _filter.set(hash3[i]);
+      }
+
+      int[] antihashes = _hasher.antiHash();
+      for (int i = 0; i < antihashes.length; i++){
+        _antifilter.set(antihashes[i]);
       }
     }
   }
