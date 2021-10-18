@@ -1,8 +1,8 @@
-package edu.brown.cs.student.searchAlgorithms;
+package edu.brown.cs.student.main.KDtree.searchAlgorithms;
 
-import edu.brown.cs.student.coordinates.KeyDistance;
-import edu.brown.cs.student.coordinates.KeyDistanceList;
-import edu.brown.cs.student.utils.Utils;
+import edu.brown.cs.student.main.KDtree.coordinates.KeyDistance;
+import edu.brown.cs.student.main.KDtree.coordinates.KeyDistanceList;
+import edu.brown.cs.student.main.KDtree.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,7 @@
-package edu.brown.cs.student.coordinates;
+package edu.brown.cs.student.main.KDtree.coordinates;
 
-import edu.brown.cs.student.node.Node;
-import edu.brown.cs.student.stars.Star;
+import edu.brown.cs.student.main.KDtree.node.Node;
+import edu.brown.cs.student.main.KDtree.stars.Star;
 import org.junit.Test;
 
 import java.util.ArrayList;

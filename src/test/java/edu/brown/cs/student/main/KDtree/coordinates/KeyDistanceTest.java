@@ -1,4 +1,4 @@
-package edu.brown.cs.student.coordinates;
+package edu.brown.cs.student.main.KDtree.coordinates;
 
 import org.junit.Test;
 

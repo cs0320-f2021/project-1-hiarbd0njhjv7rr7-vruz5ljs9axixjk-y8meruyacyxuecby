@@ -1,4 +1,4 @@
-package edu.brown.cs.student.node;
+package edu.brown.cs.student.main.KDtree.node;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package edu.brown.cs.student.coordinates;
+package edu.brown.cs.student.main.KDtree.coordinates;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public interface Coordinate<T> {
    * Get the coordinate value at the dimension requested.
    *
    * @param dim the dimension number, from 1 to n where n is a positive integer.
-   * @return a Double value, any real number.
+   * @return a Integer value, any real number.
    */
   Double getCoordinateVal(int dim);
 
@@ -26,7 +26,7 @@ public interface Coordinate<T> {
   /**
    * Get all coordinate values of the Coordinate.
    *
-   * @return a List of Double; i.e., a list of as many real numbers as there are dimensions.
+   * @return a List of Integer; i.e., a list of as many real integers as there are dimensions.
    */
   List<Double> getCoordinates();
 
