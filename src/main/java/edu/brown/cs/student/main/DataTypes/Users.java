@@ -4,7 +4,7 @@ import edu.brown.cs.student.main.BloomFilter.BloomFilter;
 
 import java.io.IOException;
 
-public class User implements IDataType {
+public class Users implements IDataType {
   Integer user_id;
   Integer weight;
   String bust_size;
@@ -13,7 +13,7 @@ public class User implements IDataType {
   String body_type;
   String horoscope;
 
-  public User(Integer user_id, Integer weight, String bust_size, Integer height,
+  public Users(Integer user_id, Integer weight, String bust_size, Integer height,
               Integer age, String body_type, String horoscope) {
     this.user_id = user_id;
     this.weight = weight;

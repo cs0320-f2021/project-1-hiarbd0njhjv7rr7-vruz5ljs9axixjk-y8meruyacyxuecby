@@ -2,9 +2,6 @@ package edu.brown.cs.student.main.ORM;
 
 import edu.brown.cs.student.main.DataTypes.IDataType;
 import edu.brown.cs.student.main.PrintHelper;
-import edu.brown.cs.student.main.DataTypes.Rent;
-import edu.brown.cs.student.main.DataTypes.Review;
-import edu.brown.cs.student.main.DataTypes.User;
 
 import java.lang.reflect.Constructor;
 import java.util.List;
@@ -137,6 +134,7 @@ public class ORM {
     }
     return null;
   }
+
   /**
    * Runs a given sqlQuery or update to the SQL database
    * @param sqlQuery - query to run

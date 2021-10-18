@@ -19,7 +19,7 @@ import edu.brown.cs.student.main.BloomFilter.BloomList;
 import edu.brown.cs.student.main.DataTypes.Interests;
 import edu.brown.cs.student.main.DataTypes.Negative;
 import edu.brown.cs.student.main.DataTypes.Positive;
-import edu.brown.cs.student.main.DataTypes.User;
+import edu.brown.cs.student.main.DataTypes.Users;
 import edu.brown.cs.student.main.DataTypes.Skills;
 import edu.brown.cs.student.main.ORM.ORM;
 import freemarker.template.Configuration;
@@ -178,8 +178,8 @@ public final class Main {
             then add to bloomFilters BloomList */
             if (arguments[1].endsWith(".sqlite3")) { //only works with sqlite databases
               orm = new ORM(arguments[1]);
-              List<User> userList = orm.sql("SELECT * FROM user");
-              for (User user : userList) {
+              List<Users> userList = orm.sql("SELECT * FROM users");
+              for (Users user : userList) {
                 bloomFilters.insert(user.makeBloomFilter());
               }
             }
@@ -192,7 +192,7 @@ public final class Main {
               throw new IOException("ERROR: Database not loaded!");
             }
             int k = Integer.parseInt(arguments[1]);
-            List<User> resultList = orm.where("user_id", arguments[2], User.class);
+            List<Users> resultList = orm.where("user_id", arguments[2], Users.class);
             if (!resultList.isEmpty()) {
               BloomFilter toCompare = resultList.get(0).makeBloomFilter();
               bloomFilters.findKSimilar(toCompare, k);
